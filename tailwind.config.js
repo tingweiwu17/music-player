@@ -8,6 +8,7 @@ module.exports = {
         themeGreen: "#02B6B3",
         grayBg: "rgba(255,255,255,0.2)",
         playingBg: "rgba(235,241,244,0.5)",
+        lightGray: "rgb(225,225,225)",
       },
       fontSize: {
         title: "20px",

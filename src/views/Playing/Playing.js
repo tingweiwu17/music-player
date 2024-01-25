@@ -1,23 +1,34 @@
 import { SlClose } from "react-icons/sl";
-import { IoPlay } from "react-icons/io5";
-import { IoPlayBack } from "react-icons/io5";
-import { IoPlayForward, IoPause } from "react-icons/io5";
+import {
+  IoPlay,
+  IoPlayBack,
+  IoVolumeHigh,
+  IoPlayForward,
+  IoPause,
+} from "react-icons/io5";
 import { LiaRandomSolid } from "react-icons/lia";
 import { GrPowerCycle } from "react-icons/gr";
 import { useState } from "react";
-import { IoVolumeHigh } from "react-icons/io5";
+import { IoMdVolumeOff } from "react-icons/io";
+import { PlayingContext } from "../../components/PlayingProvider";
+import { useContext } from "react";
 // import "./Playing.scss";
 
 const Playing = () => {
-  const [start, setStart] = useState(false);
+  const [volumeOn, setVolumeOn] = useState(true);
+  const { isPlaying, setIsPlaying } = useContext(PlayingContext);
 
   const playOrPause = (condition) => {
-    setStart(condition);
+    setIsPlaying(condition);
+  };
+
+  const volumeOnOrOff = (condition) => {
+    setVolumeOn(condition);
   };
   return (
     <>
       <div className="bg-playingBg min-h-screen  fixed bottom-0 w-full rounded-t-[40px]">
-        <SlClose className="w-7 h-7 cursor-pointer relative top-5 left-5" />
+        <SlClose className="w-7 h-7 cursor-pointer drop-shadow-xl relative top-5 left-5" />
         <div className="w-[450px] m-auto mt-20">
           <div className="rounded-xl h-[400px] border-2 my-10"></div>
           <p className="text-center font-bold">Song in the playlist</p>
@@ -30,22 +41,22 @@ const Playing = () => {
             <span>03:00</span>
           </div>
           <div className="flex justify-center items-center mt-2 mb-6">
-            <LiaRandomSolid className="w-5 h-5  mx-4 cursor-pointer" />
+            <LiaRandomSolid className="w-5 h-5  mx-4 cursor-pointer active:drop-shadow-none" />
             <div className="flex justify-center ">
               <IoPlayBack className="w-8 h-8 text-white mx-2 drop-shadow-lg cursor-pointer" />
-              {!start ? (
+              {!isPlaying ? (
                 <IoPlay
-                  className="w-8 h-8 text-white mx-2 drop-shadow-lg cursor-pointer"
+                  className="w-8 h-8 text-white mx-2 drop-shadow-lg cursor-pointer active:drop-shadow-none"
                   onClick={() => playOrPause(true)}
                 />
               ) : (
                 <IoPause
-                  className="w-8 h-8 text-white mx-2 drop-shadow-lg cursor-pointer"
+                  className="w-8 h-8 text-white mx-2 drop-shadow-lg cursor-pointer active:drop-shadow-none"
                   onClick={() => playOrPause(false)}
                 />
               )}
 
-              <IoPlayForward className="w-8 h-8 text-white mx-2 drop-shadow-lg cursor-pointer" />
+              <IoPlayForward className="w-8 h-8 text-white mx-2 drop-shadow-lg cursor-pointer active:drop-shadow-none" />
             </div>
             <GrPowerCycle className="w-5 h-5 mx-4 cursor-pointer" />
           </div>
@@ -53,7 +64,17 @@ const Playing = () => {
             <p className="h-[1px] bg-white "></p>
             <p className="h-1 w-[100px] bg-white mb-14"></p>
             {/* <input type="range" /> */}
-            <IoVolumeHigh className="-top-16 right-6 relative" />
+            {volumeOn ? (
+              <IoVolumeHigh
+                className="-top-16 right-6 relative"
+                onClick={() => volumeOnOrOff(false)}
+              />
+            ) : (
+              <IoMdVolumeOff
+                className="-top-16 right-6 relative"
+                onClick={() => volumeOnOrOff(true)}
+              />
+            )}
           </div>
         </div>
       </div>
