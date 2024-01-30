@@ -12,7 +12,7 @@ import { useState } from "react";
 import { IoMdVolumeOff } from "react-icons/io";
 import { PlayingContext } from "../../components/PlayingProvider";
 import { useContext } from "react";
-// import "./Playing.scss";
+import "./Playing.scss";
 
 const Playing = () => {
   const [volumeOn, setVolumeOn] = useState(true);
@@ -61,17 +61,15 @@ const Playing = () => {
             <GrPowerCycle className="w-5 h-5 mx-4 cursor-pointer" />
           </div>
           <div className="w-[300px] m-auto relative">
-            <p className="h-[1px] bg-white "></p>
-            <p className="h-1 w-[100px] bg-white mb-14"></p>
-            {/* <input type="range" /> */}
+            <input type="range" />
             {volumeOn ? (
               <IoVolumeHigh
-                className="-top-16 right-6 relative"
+                className="-top-[18px] right-6 relative"
                 onClick={() => volumeOnOrOff(false)}
               />
             ) : (
               <IoMdVolumeOff
-                className="-top-16 right-6 relative"
+                className="-top-[18px] right-6 relative"
                 onClick={() => volumeOnOrOff(true)}
               />
             )}

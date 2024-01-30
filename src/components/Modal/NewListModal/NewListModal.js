@@ -21,13 +21,15 @@ const NewListModal = ({ isOpen }) => {
     },
   };
   const methods = useForm();
+
+  const onSubmit = () => {};
   return (
     <>
       <Modal ariaHideApp={false} style={customModalStyle} isOpen={isOpen}>
         <FormProvider {...methods}>
           <form
             className="bg-white rounded-md m-auto flex flex-col p-4 "
-            onSubmit={methods.handleSubmit()}
+            onSubmit={methods.handleSubmit(onSubmit())}
           >
             <h3 className="border-b text-center border-black pb-2">
               Add Playlist
