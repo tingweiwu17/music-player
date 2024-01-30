@@ -7,7 +7,7 @@ const Headerbar = () => {
   };
   return (
     <>
-      <div className="bg-white w-full h-[50px] flex justify-between items-center shadow-xl border-b-2 border-themeBlur">
+      <div className="bg-white w-full h-[50px] p-4 flex justify-between items-center shadow-xl border-b-2 border-themeBlur">
         <div className="cursor-pointer" onClick={toFrontPage}>
           logo
         </div>

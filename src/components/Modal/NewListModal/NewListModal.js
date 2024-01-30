@@ -1,7 +1,8 @@
 import Modal from "react-modal";
 import { useForm, FormProvider } from "react-hook-form";
+import "./NewListModal.scss";
 
-const NewListModal = ({ isOpen }) => {
+const NewListModal = ({ isOpen, close }) => {
   const customModalStyle = {
     overlay: {
       backgroundColor: "transparent",
@@ -28,22 +29,33 @@ const NewListModal = ({ isOpen }) => {
       <Modal ariaHideApp={false} style={customModalStyle} isOpen={isOpen}>
         <FormProvider {...methods}>
           <form
-            className="bg-white rounded-md m-auto flex flex-col p-4 "
+            className="bg-white rounded-xl m-auto flex flex-col p-6"
             onSubmit={methods.handleSubmit(onSubmit())}
           >
-            <h3 className="border-b text-center border-black pb-2">
+            <h3 className="border-b text-center border-themeGreen pb-2 font-bold text-themeGreen">
               Add Playlist
             </h3>
             <input
-              className="bg-black mt-2 py-1 px-2 rounded"
+              className="bg-lightGray mt-4 px-2.5 py-2 rounded-xl text-xs w-[230px]"
               placeholder="Playlist name"
               {...methods.register("playlist-title", { required: true })}
             />
 
-            <textarea className="bg-black mt-2 py-1 px-2 rounded" />
-            <div className="flex justify-between">
-              <button>Cancel</button>
-              <button>Add</button>
+            <textarea className="bg-lightGray mt-2 px-2.5 py-2 rounded-xl text-xs" />
+            <div className="flex justify-between mt-4">
+              <button
+                className="flex items-center text-white px-2.5 py-1.5 rounded-xl bg-themeGreen hover:bg-white hover:text-themeGreen"
+                onClick={close}
+                type="button"
+              >
+                Cancel
+              </button>
+              <button
+                className="flex items-center text-themeGreen px-2.5 py-1.5 rounded-xl bg-white border-[1px] border-themeGreen hover:text-white hover:bg-themeGreen"
+                type="submit"
+              >
+                Add
+              </button>
             </div>
           </form>
         </FormProvider>

@@ -7,7 +7,7 @@ import { GrPowerCycle } from "react-icons/gr";
 const Footer = () => {
   return (
     <>
-      <div className="fixed bottom-0 flex bg-white h-[80px] justify-between items-center w-full z-80 p-2.5">
+      <div className="fixed bottom-0 flex bg-white h-[80px] justify-between items-center w-full z-80 p-4 border-t-[1px] border-lightGray">
         <div className="flex items-center">
           <div className="bg-themeBlue rounded-md w-[60px] h-[60px]"></div>
           <div className="flex flex-col text-sm ml-3 font-bold">
