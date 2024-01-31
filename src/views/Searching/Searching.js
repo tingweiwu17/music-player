@@ -20,6 +20,25 @@ const Searching = () => {
     setFavorSong(condition);
   };
 
+  function formatTime(duration) {
+    duration = duration.replace("PT", "");
+    duration = duration.replace("H", ":").replace("M", ":").replace("S", "");
+    const parts = duration.split(":").map((part) => parseInt(part));
+    let i;
+    if (parts.length === 3) {
+      i = 0;
+    } else {
+      i = -1;
+    }
+    if (parts[i + 1] < 10) {
+      parts[i + 1] = "0" + parts[i + 1];
+    }
+    if (parts[i + 2] < 10) {
+      parts[i + 2] = "0" + parts[i + 2];
+    }
+    return parts.join(":");
+  }
+
   const getSearch = () => {
     axios
       .get("https://www.googleapis.com/youtube/v3/search", {
@@ -28,23 +47,46 @@ const Searching = () => {
           part: "id,snippet",
           q: watchInput,
           type: "video",
-          maxResult: 50,
+          maxResults: 5,
         },
       })
       .then((res) => {
-        console.log(res.data);
         const videos = res.data.items;
         setVideoList(videos);
-        // const videoId = res.data.items
-        // axios.get("https://www.googleapis.com/youtube/v3/videos", {
-        //   params: {
-        //     key: "AIzaSyCujisGM1ePBvGwD5waTQ1p9fSk8tcN8VI",
-        //     part: "contentDetails",
-        //     id: videoId,
-        //   },
-        // });
+        for (let i = 0; i < videos.length; i++) {
+          const videoId = videos[i].id.videoId;
+          axios
+            .get("https://www.googleapis.com/youtube/v3/videos", {
+              params: {
+                key: "AIzaSyCujisGM1ePBvGwD5waTQ1p9fSk8tcN8VI",
+                part: "contentDetails",
+                id: videoId,
+              },
+            })
+            .then((ress) => {
+              console.log(ress.data);
+              const duration = formatTime(
+                ress.data.items[0].contentDetails.duration
+              );
+              console.log(duration);
+              setVideoList((prevVideoList) => {
+                const updatedVideos = prevVideoList.map((video) => {
+                  if (video.id.videoId === videoId) {
+                    return { ...video, duration: duration };
+                  }
+                  return video;
+                });
+                return updatedVideos;
+              });
+            })
+            .catch((err) => {
+              console.error("获取视频详细信息时发生错误：", err);
+            });
+        }
       })
-      .catch((error) => {});
+      .catch((error) => {
+        console.error("发生错误：", error);
+      });
   };
 
   return (
@@ -58,7 +100,7 @@ const Searching = () => {
               onSubmit={methods.handleSubmit(getSearch)}
             >
               <input
-                className="p-2 indent-1 text-sm  w-[300px] h-8 border-2 rounded-3xl"
+                className="p-2 indent-1 text-xs  w-[300px] h-8 border-2 rounded-3xl"
                 placeholder="Search..."
                 {...methods.register("search-word", { required: true })}
               />
@@ -79,13 +121,13 @@ const Searching = () => {
           )}
           {videoList.map((video, index) => (
             <div
-              className="grid grid-cols-[2fr,1fr,1fr,50px,30px] text-xs font-bold bg-white  items-center px-6 py-1.5 cursor-pointer hover:bg-lightGray"
+              className="grid grid-cols-[2fr,1fr,1fr,50px,30px] gap-2 text-xs font-bold bg-white  items-center px-6 py-1.5 cursor-pointer hover:bg-lightGray"
               key={video.id.videoId}
             >
-              <p className="flex items-center">
+              <div className="flex items-center">
                 <div className="bg-themeBlue rounded w-[40px] h-[40px] mr-2"></div>
-                {he.decode(video.snippet.title)}
-              </p>
+                <p>{he.decode(video.snippet.title)}</p>
+              </div>
 
               <p>{video.snippet.channelTitle}</p>
               {!favorSong ? (
@@ -99,7 +141,7 @@ const Searching = () => {
                   onClick={() => pressLove(false)}
                 />
               )}
-              <p>03:43</p>
+              <p className="text-center">{video.duration}</p>
               <PiListBold className="w-5 h-5" />
             </div>
           ))}
