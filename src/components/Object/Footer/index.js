@@ -1,10 +1,13 @@
-import { IoPlay, IoPause } from "react-icons/io5";
-import { IoPlayBack } from "react-icons/io5";
-import { IoPlayForward } from "react-icons/io5";
+import { IoPlay, IoPause, IoPlayForward, IoPlayBack } from "react-icons/io5";
 import { LiaRandomSolid } from "react-icons/lia";
 import { GrPowerCycle } from "react-icons/gr";
+import { useSelector, useDispatch } from "react-redux";
+import { togglePlayPause } from "../../store/musicSlice";
 
 const Footer = () => {
+  const isPlaying = useSelector((state) => state.music.isPlaying);
+  const dispatch = useDispatch();
+
   return (
     <>
       <div className="fixed bottom-0 flex bg-white h-[80px] justify-between items-center w-full z-80 p-4 border-t-[1px] border-lightGray">
@@ -21,8 +24,17 @@ const Footer = () => {
             <LiaRandomSolid className="w-5 h-5  mx-4" />
             <div className="flex justify-center ">
               <IoPlayBack className="w-8 h-8  mx-2" />
-              <IoPlay className="w-8 h-8  mx-2 drop-shadow-lg" />
-              <IoPause className="w-8 h-8  mx-2 drop-shadow-lg" />
+              {!isPlaying ? (
+                <IoPlay
+                  className="w-8 h-8  mx-2 drop-shadow-lg cursor-pointer"
+                  onClick={() => dispatch(togglePlayPause())}
+                />
+              ) : (
+                <IoPause
+                  className="w-8 h-8  mx-2 drop-shadow-lg cursor-pointer"
+                  onClick={() => dispatch(togglePlayPause())}
+                />
+              )}
               <IoPlayForward className="w-8 h-8  mx-2" />
             </div>
             <GrPowerCycle className="w-5 h-5  mx-4" />

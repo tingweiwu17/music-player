@@ -5,19 +5,43 @@ import { CiSearch } from "react-icons/ci";
 import { FormProvider, useForm } from "react-hook-form";
 import axios from "axios";
 import { useState } from "react";
-import { GoHeart } from "react-icons/go";
-import { GoHeartFill } from "react-icons/go";
+import { GoHeart, GoHeartFill } from "react-icons/go";
 import { PiListBold } from "react-icons/pi";
 import he from "he";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  addToPlaylist,
+  removeFromPlaylist,
+} from "../../components/store/musicSlice";
 
 const Searching = () => {
   const methods = useForm();
   const [videoList, setVideoList] = useState([]);
-  const [favorSong, setFavorSong] = useState(false);
   const watchInput = methods.watch("search-word");
+  const dispatch = useDispatch();
+  const playlists = useSelector((state) => state.music.playlists);
 
-  const pressLove = (condition) => {
-    setFavorSong(condition);
+  const isSongInFavorites = (playlists, songId) => {
+    if (
+      !playlists ||
+      !playlists.favorites ||
+      !Array.isArray(playlists.favorites)
+    ) {
+      return false;
+    }
+    return playlists.favorites.some((song) => song.id === songId);
+  };
+
+  const pressLove = (condition, index) => {
+    const vl = videoList[index];
+    console.log(vl);
+    const song = { id: vl.id.videoId, duration: vl.duration };
+    const playlistName = "favorites";
+    if (condition) {
+      dispatch(addToPlaylist({ playlistName, song }));
+    } else {
+      dispatch(removeFromPlaylist({}));
+    }
   };
 
   function formatTime(duration) {
@@ -67,7 +91,6 @@ const Searching = () => {
               const duration = formatTime(
                 ress.data.items[0].contentDetails.duration
               );
-              // console.log(duration);
               setVideoList((prevVideoList) => {
                 const updatedVideos = prevVideoList.map((video) => {
                   if (video.id.videoId === videoId) {
@@ -77,7 +100,6 @@ const Searching = () => {
                 });
                 return updatedVideos;
               });
-              // console.log(videoList);
             })
             .catch((err) => {
               console.error("获取视频详细信息时发生错误：", err);
@@ -135,15 +157,15 @@ const Searching = () => {
               </div>
 
               <p>{video.snippet.channelTitle}</p>
-              {!favorSong ? (
+              {!isSongInFavorites(playlists, video.id.videoId) ? (
                 <GoHeart
                   className="hover:text-themeBlue"
-                  onClick={() => pressLove(true)}
+                  onClick={() => pressLove(true, index)}
                 />
               ) : (
                 <GoHeartFill
                   className="text-themeBlue"
-                  onClick={() => pressLove(false)}
+                  onClick={() => pressLove(false, index)}
                 />
               )}
               <p className="text-center">{video.duration}</p>

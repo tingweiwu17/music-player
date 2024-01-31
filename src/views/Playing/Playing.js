@@ -12,9 +12,13 @@ import { useState } from "react";
 import { IoMdVolumeOff } from "react-icons/io";
 import Headerbar from "../../components/Object/Headerbar";
 import "./Playing.scss";
+import { useSelector, useDispatch } from "react-redux";
+import { togglePlayPause } from "../../components/store/musicSlice";
 
 const Playing = () => {
   const [volumeOn, setVolumeOn] = useState(true);
+  const dispatch = useDispatch();
+  const isPlaying = useSelector((state) => state.music.isPlaying);
 
   const volumeOnOrOff = (condition) => {
     setVolumeOn(condition);
@@ -39,9 +43,17 @@ const Playing = () => {
             <LiaRandomSolid className="w-5 h-5  mx-4 cursor-pointer active:drop-shadow-none" />
             <div className="flex justify-center ">
               <IoPlayBack className="w-8 h-8 text-white mx-2 drop-shadow-lg cursor-pointer" />
-              <IoPlay className="w-8 h-8 text-white mx-2 drop-shadow-lg cursor-pointer active:drop-shadow-none" />
-              <IoPause className="w-8 h-8 text-white mx-2 drop-shadow-lg cursor-pointer active:drop-shadow-none" />
-
+              {!isPlaying ? (
+                <IoPlay
+                  className="w-8 h-8 text-white mx-2 drop-shadow-lg cursor-pointer active:drop-shadow-none"
+                  onClick={() => dispatch(togglePlayPause())}
+                />
+              ) : (
+                <IoPause
+                  className="w-8 h-8 text-white mx-2 drop-shadow-lg cursor-pointer active:drop-shadow-none"
+                  onClick={() => dispatch(togglePlayPause())}
+                />
+              )}
               <IoPlayForward className="w-8 h-8 text-white mx-2 drop-shadow-lg cursor-pointer active:drop-shadow-none" />
             </div>
             <GrPowerCycle className="w-5 h-5 mx-4 cursor-pointer" />
