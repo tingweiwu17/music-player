@@ -29,7 +29,7 @@ const Footer = () => {
           </div>
           <div className="flex items-center text-xs mt-2">
             <span>01:00</span>
-            <p className="w-full h-[2px] bg-black mx-3"> </p>
+            <p className="w-full h-[2px] bg-grayBg mx-3"> </p>
             <span>03:00</span>
           </div>
         </div>

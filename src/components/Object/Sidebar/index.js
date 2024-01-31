@@ -25,7 +25,7 @@ const SideBar = ({ children }) => {
           <BsFillMusicPlayerFill className="text-white w-10 h-10" />
         </div>
         <button
-          className="w-full px-3 py-1 rounded bg-white text-left"
+          className="w-full px-3 py-1 rounded text-sm bg-white text-left"
           onClick={toSearchingPage}
         >
           Search...

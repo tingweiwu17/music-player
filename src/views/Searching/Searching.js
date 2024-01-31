@@ -64,11 +64,10 @@ const Searching = () => {
               },
             })
             .then((ress) => {
-              console.log(ress.data);
               const duration = formatTime(
                 ress.data.items[0].contentDetails.duration
               );
-              console.log(duration);
+              // console.log(duration);
               setVideoList((prevVideoList) => {
                 const updatedVideos = prevVideoList.map((video) => {
                   if (video.id.videoId === videoId) {
@@ -78,6 +77,7 @@ const Searching = () => {
                 });
                 return updatedVideos;
               });
+              // console.log(videoList);
             })
             .catch((err) => {
               console.error("获取视频详细信息时发生错误：", err);
@@ -125,7 +125,12 @@ const Searching = () => {
               key={video.id.videoId}
             >
               <div className="flex items-center">
-                <div className="bg-themeBlue rounded w-[40px] h-[40px] mr-2"></div>
+                <div className="bg-black rounded w-[80px] h-[60px] mr-4">
+                  <img
+                    src={video.snippet.thumbnails.high.url}
+                    alt="Thumbnail of the video"
+                  />
+                </div>
                 <p>{he.decode(video.snippet.title)}</p>
               </div>
 

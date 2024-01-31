@@ -4,14 +4,17 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        themeBlue: "#0089D1",
-        themeGreen: "#02B6B3",
-        grayBg: "rgba(255,255,255,0.2)",
+        themeBlue: "rgba(0, 137, 209, 0.5)",
+        themeGreen: "rgba(2, 182, 179, 0.5)",
+        grayBg: "rgba(0,0,0,0.5)",
         playingBg: "rgba(235,241,244,0.5)",
         lightGray: "rgb(225,225,225)",
       },
       fontSize: {
         title: "20px",
+      },
+      minHeight: {
+        playing: "calc(100% - 56px)",
       },
     },
   },

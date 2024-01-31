@@ -10,26 +10,21 @@ import { LiaRandomSolid } from "react-icons/lia";
 import { GrPowerCycle } from "react-icons/gr";
 import { useState } from "react";
 import { IoMdVolumeOff } from "react-icons/io";
-import { PlayingContext } from "../../components/PlayingProvider";
-import { useContext } from "react";
+import Headerbar from "../../components/Object/Headerbar";
 import "./Playing.scss";
 
 const Playing = () => {
   const [volumeOn, setVolumeOn] = useState(true);
-  const { isPlaying, setIsPlaying } = useContext(PlayingContext);
-
-  const playOrPause = (condition) => {
-    setIsPlaying(condition);
-  };
 
   const volumeOnOrOff = (condition) => {
     setVolumeOn(condition);
   };
   return (
     <>
-      <div className="bg-playingBg min-h-screen  fixed bottom-0 w-full rounded-t-[40px]">
+      <Headerbar />
+      <div className="bg-playingBg min-h-playing fixed bottom-0 w-full rounded-t-[40px]">
         <SlClose className="w-7 h-7 cursor-pointer drop-shadow-xl relative top-5 left-5" />
-        <div className="w-[450px] m-auto mt-20">
+        <div className="w-[450px] m-auto mt-20 ">
           <div className="rounded-xl h-[400px] border-2 my-10"></div>
           <p className="text-center font-bold">Song in the playlist</p>
           <p className="text-center border-b pb-8 border-white">
@@ -44,17 +39,8 @@ const Playing = () => {
             <LiaRandomSolid className="w-5 h-5  mx-4 cursor-pointer active:drop-shadow-none" />
             <div className="flex justify-center ">
               <IoPlayBack className="w-8 h-8 text-white mx-2 drop-shadow-lg cursor-pointer" />
-              {!isPlaying ? (
-                <IoPlay
-                  className="w-8 h-8 text-white mx-2 drop-shadow-lg cursor-pointer active:drop-shadow-none"
-                  onClick={() => playOrPause(true)}
-                />
-              ) : (
-                <IoPause
-                  className="w-8 h-8 text-white mx-2 drop-shadow-lg cursor-pointer active:drop-shadow-none"
-                  onClick={() => playOrPause(false)}
-                />
-              )}
+              <IoPlay className="w-8 h-8 text-white mx-2 drop-shadow-lg cursor-pointer active:drop-shadow-none" />
+              <IoPause className="w-8 h-8 text-white mx-2 drop-shadow-lg cursor-pointer active:drop-shadow-none" />
 
               <IoPlayForward className="w-8 h-8 text-white mx-2 drop-shadow-lg cursor-pointer active:drop-shadow-none" />
             </div>

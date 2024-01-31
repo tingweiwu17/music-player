@@ -8,7 +8,7 @@ import { Route, Routes } from "react-router-dom";
 function App() {
   return (
     <>
-      <main className="min-h-screen bg-gradient-to-r from-themeBlue  to-themeGreen to opacity-50 ">
+      <main className="min-h-screen bg-gradient-to-r text-grayBg from-themeBlue to-themeGreen">
         <Routes>
           <Route exact path="/" Component={Frontpage} />
           <Route path="/playing" Component={Playing} />
