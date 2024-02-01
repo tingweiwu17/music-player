@@ -1,12 +1,27 @@
-import { IoPlay, IoPause, IoPlayForward, IoPlayBack } from "react-icons/io5";
+import {
+  IoPlay,
+  IoPause,
+  IoPlayForward,
+  IoPlayBack,
+  IoVolumeHigh,
+} from "react-icons/io5";
 import { LiaRandomSolid } from "react-icons/lia";
 import { GrPowerCycle } from "react-icons/gr";
 import { useSelector, useDispatch } from "react-redux";
 import { togglePlayPause } from "../../store/musicSlice";
+import { IoMdVolumeOff } from "react-icons/io";
+
+import { useState } from "react";
 
 const Footer = () => {
   const isPlaying = useSelector((state) => state.music.isPlaying);
   const dispatch = useDispatch();
+
+  const [volumeOn, setVolumeOn] = useState(true);
+
+  const volumeOnOrOff = (condition) => {
+    setVolumeOn(condition);
+  };
 
   return (
     <>
@@ -45,7 +60,20 @@ const Footer = () => {
             <span>03:00</span>
           </div>
         </div>
-        <div className="w-[170px]"></div>
+        <div className="w-[170px] relative">
+          <input type="range" className="relative" />
+          {volumeOn ? (
+            <IoVolumeHigh
+              className=" right-6 relative"
+              onClick={() => volumeOnOrOff(false)}
+            />
+          ) : (
+            <IoMdVolumeOff
+              className=" right-6 relative"
+              onClick={() => volumeOnOrOff(true)}
+            />
+          )}
+        </div>
       </div>
     </>
   );

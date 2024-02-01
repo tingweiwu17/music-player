@@ -12,10 +12,9 @@ const Frontpage = () => {
       <Headerbar />
       <div className="flex mb-10 justify-center items-baseline pt-[250px]">
         <BsFillMusicPlayerFill className="text-white w-20 h-20 mx-10" />
-        {/* <div className="border-b-4 border-white w-14 mx-1"></div> */}
         <BsFillMusicPlayerFill className="text-white w-20 h-20 mx-10" />
       </div>
-      <div className="pt-5 ">
+      <div className="pt-5">
         <div className="w-[400px] border-white border-4 rounded-lg m-auto p-4">
           <h1 className="font-bold text-white text-title text-center border-b  pb-2">
             Title of Music Player
@@ -26,7 +25,7 @@ const Frontpage = () => {
           </p>
           <button
             onClick={() => startThePlaying()}
-            className="border-white border-2 bg-white px-2 py-[6px] text-black font-bold"
+            className="border-white border-2 rounded-2xl bg-white px-2 py-[6px] text-grayBg font-bold"
           >
             Get started
           </button>

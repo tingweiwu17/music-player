@@ -8,17 +8,44 @@ import {
 } from "react-icons/io5";
 import { LiaRandomSolid } from "react-icons/lia";
 import { GrPowerCycle } from "react-icons/gr";
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { IoMdVolumeOff } from "react-icons/io";
 import Headerbar from "../../components/Object/Headerbar";
 import "./Playing.scss";
 import { useSelector, useDispatch } from "react-redux";
 import { togglePlayPause } from "../../components/store/musicSlice";
+import YouTube from "react-youtube";
 
 const Playing = () => {
   const [volumeOn, setVolumeOn] = useState(true);
   const dispatch = useDispatch();
   const isPlaying = useSelector((state) => state.music.isPlaying);
+  const playerRef = useRef(null);
+
+  const videoOpts = {
+    height: "350",
+    width: "450",
+    playerVars: {
+      autoplay: 0,
+    },
+  };
+
+  const videoId = "5e3rKInegeU";
+
+  useEffect(() => {
+    if (playerRef.current) {
+      const player = playerRef.current.getInternalPlayer();
+      if (player) {
+        if (isPlaying) {
+          if (player.getPlayerState() !== 1) {
+            player.playVideo();
+          }
+        } else {
+          player.pauseVideo();
+        }
+      }
+    }
+  }, [isPlaying]);
 
   const volumeOnOrOff = (condition) => {
     setVolumeOn(condition);
@@ -29,7 +56,9 @@ const Playing = () => {
       <div className="bg-playingBg min-h-playing fixed bottom-0 w-full rounded-t-[40px]">
         <SlClose className="w-7 h-7 cursor-pointer drop-shadow-xl relative top-5 left-5" />
         <div className="w-[450px] m-auto mt-20 ">
-          <div className="rounded-xl h-[400px] border-2 my-10"></div>
+          <div className="rounded-xl my-10">
+            <YouTube videoId={videoId} opts={videoOpts} ref={playerRef} />
+          </div>
           <p className="text-center font-bold">Song in the playlist</p>
           <p className="text-center border-b pb-8 border-white">
             - Singer of the song -

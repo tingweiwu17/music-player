@@ -15,6 +15,7 @@ module.exports = {
       },
       minHeight: {
         playing: "calc(100% - 56px)",
+        playlist: "calc(100vh - 136px)",
       },
     },
   },

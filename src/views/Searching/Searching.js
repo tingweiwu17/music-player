@@ -41,6 +41,7 @@ const Searching = () => {
       channelId: vl.snippet.channelId,
       imgUrl: vl.snippet.thumbnails.default.url,
       videoTitle: vl.snippet.title,
+      favorite: true,
     };
     const playlistName = "favorites";
     if (condition) {
