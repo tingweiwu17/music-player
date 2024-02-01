@@ -34,13 +34,19 @@ const Searching = () => {
 
   const pressLove = (condition, index) => {
     const vl = videoList[index];
-    console.log(vl);
-    const song = { id: vl.id.videoId, duration: vl.duration };
+    const song = {
+      id: vl.id.videoId,
+      duration: vl.duration,
+      channel: vl.snippet.channelTitle,
+      channelId: vl.snippet.channelId,
+      imgUrl: vl.snippet.thumbnails.default.url,
+      videoTitle: vl.snippet.title,
+    };
     const playlistName = "favorites";
     if (condition) {
       dispatch(addToPlaylist({ playlistName, song }));
     } else {
-      dispatch(removeFromPlaylist({}));
+      dispatch(removeFromPlaylist({ playlistName, songId: vl.id.videoId }));
     }
   };
 
@@ -133,7 +139,7 @@ const Searching = () => {
             </form>
           </FormProvider>
           {videoList && videoList.length > 0 && (
-            <div className="grid grid-cols-[2fr,1fr,1fr,50px,30px] bg-white text-xs py-2 px-6 border-b-[1px] border-gray">
+            <div className="grid grid-cols-[2.5fr,1fr,50px,50px,30px] bg-white text-xs py-2 px-6 border-b-[1px] border-gray">
               <p>名稱</p>
               <p>頻道</p>
               <p></p>
@@ -143,12 +149,13 @@ const Searching = () => {
           )}
           {videoList.map((video, index) => (
             <div
-              className="grid grid-cols-[2fr,1fr,1fr,50px,30px] gap-2 text-xs font-bold bg-white  items-center px-6 py-1.5 cursor-pointer hover:bg-lightGray"
+              className="grid grid-cols-[2.5fr,1fr,50px,50px,30px] gap-2 text-xs font-bold bg-white  items-center px-6 py-1.5 cursor-pointer hover:bg-lightGray"
               key={video.id.videoId}
             >
               <div className="flex items-center">
-                <div className="bg-black rounded w-[80px] h-[60px] mr-4">
+                <div className="bg-black rounded min-w-[80px] min-h-[60px] mr-4">
                   <img
+                    className="w-[80px] h-[60px]"
                     src={video.snippet.thumbnails.high.url}
                     alt="Thumbnail of the video"
                   />
