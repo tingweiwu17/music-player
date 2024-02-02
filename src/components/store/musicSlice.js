@@ -4,7 +4,16 @@ const musicSlice = createSlice({
   name: "music",
   initialState: {
     playlists: {
-      favorites: [],
+      favorites: {
+        name: "Favorites",
+        description: "A collection of favorite songs.",
+        songs: [],
+      },
+      myPlaylist: {
+        name: "My Playlist",
+        description: "A custom playlist created by the user.",
+        songs: [],
+      },
     },
     currentPlaylist: null,
     currentSong: null,
@@ -16,13 +25,13 @@ const musicSlice = createSlice({
     },
     addToPlaylist: (state, action) => {
       const { playlistName, song } = action.payload;
-      state.playlists[playlistName].push(song);
+      state.playlists[playlistName].songs.push(song);
     },
     removeFromPlaylist: (state, action) => {
       const { playlistName, songId } = action.payload;
-      state.playlists[playlistName] = state.playlists[playlistName].filter(
-        (song) => song.id !== songId
-      );
+      state.playlists[playlistName].songs = state.playlists[
+        playlistName
+      ].songs.filter((song) => song.id !== songId);
     },
     clearPlaylist: (state, action) => {
       const { playlistName } = action.payload;

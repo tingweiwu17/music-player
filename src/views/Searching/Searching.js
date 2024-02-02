@@ -70,13 +70,13 @@ const Searching = () => {
               });
             })
             .catch((err) => {
-              console.error("获取视频详细信息时发生错误：", err);
+              console.error("取得影片資訊時錯誤：", err);
             });
         }
         console.log(videoList);
       })
       .catch((error) => {
-        console.error("发生错误：", error);
+        console.error("搜尋發生錯誤：", error);
       });
   };
 

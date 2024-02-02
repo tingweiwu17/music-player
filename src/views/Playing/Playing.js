@@ -15,12 +15,15 @@ import "./Playing.scss";
 import { useSelector, useDispatch } from "react-redux";
 import { togglePlayPause } from "../../components/store/musicSlice";
 import YouTube from "react-youtube";
+// import axios from "axios";
 
 const Playing = () => {
   const [volumeOn, setVolumeOn] = useState(true);
+  const playerRef = useRef(null);
   const dispatch = useDispatch();
   const isPlaying = useSelector((state) => state.music.isPlaying);
-  const playerRef = useRef(null);
+  const videoId = useSelector((state) => state.music.currentSong);
+  // const currentPlaylist = useSelector((state) => state.music.currentPlaylist);
 
   const videoOpts = {
     height: "250",
@@ -30,8 +33,7 @@ const Playing = () => {
     },
   };
 
-  const videoId = "5e3rKInegeU";
-
+  //play and pause
   useEffect(() => {
     if (playerRef.current) {
       const player = playerRef.current.getInternalPlayer();
@@ -46,6 +48,25 @@ const Playing = () => {
       }
     }
   }, [isPlaying]);
+
+  // useEffect(() => {
+  //   if (videoId) {
+  //     axios
+  //       .get("https://www.googleapis.com/youtube/v3/videos", {
+  //         params: {
+  //           key: "YOUR_API_KEY",
+  //           part: "contentDetails",
+  //           id: videoId,
+  //         },
+  //       })
+  //       .then((ress) => {
+  //         console.log(ress.data);
+  //       })
+  //       .catch((err) => {
+  //         console.error(err);
+  //       });
+  //   }
+  // }, [videoId]);
 
   const volumeOnOrOff = (condition) => {
     setVolumeOn(condition);
