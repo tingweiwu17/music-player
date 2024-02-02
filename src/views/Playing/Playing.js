@@ -23,7 +23,7 @@ const Playing = () => {
   const playerRef = useRef(null);
 
   const videoOpts = {
-    height: "350",
+    height: "250",
     width: "450",
     playerVars: {
       autoplay: 0,
@@ -50,6 +50,19 @@ const Playing = () => {
   const volumeOnOrOff = (condition) => {
     setVolumeOn(condition);
   };
+
+  // const [currentTime, setCurrentTime] = useState();
+
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     if (playerRef.current && playerRef.current.internalPlayer) {
+  //       setCurrentTime(playerRef.current.internalPlayer.getCurrentTime());
+  //     }
+  //   }, 1000);
+  //   console.log(currentTime);
+  //   return () => clearInterval(interval);
+  // }, []);
+
   return (
     <>
       <Headerbar />

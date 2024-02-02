@@ -4,6 +4,7 @@ import NewListModal from "../../Modal/NewListModal/NewListModal";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { GiMusicSpell } from "react-icons/gi";
 
 const SideBar = ({ children }) => {
   const [newList, setNewList] = useState(false);
@@ -16,6 +17,10 @@ const SideBar = ({ children }) => {
 
   const toSearchingPage = () => {
     navigate("/searching");
+  };
+
+  const toSongPage = () => {
+    navigate("/song");
   };
 
   return (
@@ -35,14 +40,19 @@ const SideBar = ({ children }) => {
         <div className="flex justify-between mt-3 text-xs">
           播放清單
           <RiPlayListAddLine
-            className="cursor-pointer w-5 h-5"
+            className="cursor-pointer w-5 h-5 mb-2"
             onClick={() => openNewList(true)}
           />
         </div>
         {Object.keys(allPlayList).map((playlistName) => (
-          <p key={playlistName} className="text-base">
-            {playlistName}
-          </p>
+          <div
+            key={playlistName}
+            className="cursor-pointer ml-4 flex items-center"
+            onClick={toSongPage}
+          >
+            <GiMusicSpell className="mr-2" />
+            <p className="font-bold drop-shadow-sm">{playlistName}</p>
+          </div>
         ))}
         <NewListModal isOpen={newList} close={() => openNewList(false)} />
       </div>
