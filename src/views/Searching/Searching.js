@@ -73,7 +73,6 @@ const Searching = () => {
               console.error("取得影片資訊時錯誤：", err);
             });
         }
-        console.log(videoList);
       })
       .catch((error) => {
         console.error("搜尋發生錯誤：", error);

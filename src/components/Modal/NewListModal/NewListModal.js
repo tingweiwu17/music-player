@@ -1,6 +1,8 @@
 import Modal from "react-modal";
 import { useForm, FormProvider } from "react-hook-form";
 import "./NewListModal.scss";
+import { useDispatch } from "react-redux";
+import { createPlaylist } from "../../store/musicSlice";
 
 const NewListModal = ({ isOpen, close }) => {
   const customModalStyle = {
@@ -22,15 +24,25 @@ const NewListModal = ({ isOpen, close }) => {
     },
   };
   const methods = useForm();
+  const dispatch = useDispatch();
 
-  const onSubmit = () => {};
+  const onSubmit = (data) => {
+    const value = data;
+    dispatch(
+      createPlaylist({
+        playlistName: value.title,
+        description: value.description,
+      })
+    );
+    close();
+  };
   return (
     <>
       <Modal ariaHideApp={false} style={customModalStyle} isOpen={isOpen}>
         <FormProvider {...methods}>
           <form
             className="bg-white rounded-xl m-auto flex flex-col p-6"
-            onSubmit={methods.handleSubmit(onSubmit())}
+            onSubmit={methods.handleSubmit(onSubmit)}
           >
             <h3 className="border-b text-center border-themeGreen pb-2 font-bold text-themeGreen">
               Add Playlist
@@ -38,10 +50,13 @@ const NewListModal = ({ isOpen, close }) => {
             <input
               className="bg-lightGray mt-4 px-2.5 py-2 rounded-xl text-xs w-[230px]"
               placeholder="Playlist name"
-              {...methods.register("playlist-title", { required: true })}
+              {...methods.register("title", { required: true })}
             />
 
-            <textarea className="bg-lightGray mt-2 px-2.5 py-2 rounded-xl text-xs" />
+            <textarea
+              className="bg-lightGray mt-2 px-2.5 py-2 rounded-xl text-xs"
+              {...methods.register("description", { required: true })}
+            />
             <div className="flex justify-between mt-4 text-xs">
               <button
                 className="flex items-center text-white px-2.5 py-1.5 rounded-xl bg-themeGreen hover:bg-white hover:text-themeGreen"

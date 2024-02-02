@@ -35,11 +35,15 @@ const musicSlice = createSlice({
     },
     clearPlaylist: (state, action) => {
       const { playlistName } = action.payload;
-      state.playlists[playlistName] = [];
+      state.playlists[playlistName].songs = [];
     },
     createPlaylist: (state, action) => {
-      const { playlistName } = action.payload;
-      state.playlists[playlistName] = [];
+      const { playlistName, description } = action.payload;
+      state.playlists[playlistName] = {
+        name: playlistName,
+        description: description,
+        songs: [],
+      };
     },
     togglePlayPause: (state) => {
       state.isPlaying = !state.isPlaying;
