@@ -15,18 +15,18 @@ import "./Playing.scss";
 import { useSelector, useDispatch } from "react-redux";
 import { togglePlayPause } from "../../components/store/musicSlice";
 import YouTube from "react-youtube";
-// import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Playing = () => {
   const [volumeOn, setVolumeOn] = useState(true);
   const playerRef = useRef(null);
   const dispatch = useDispatch();
   const isPlaying = useSelector((state) => state.music.isPlaying);
-  const videoId = useSelector((state) => state.music.currentSong);
-  // const currentPlaylist = useSelector((state) => state.music.currentPlaylist);
+  const videoId = useSelector((state) => state.music.currentSong.id);
+  const navigate = useNavigate();
 
   const videoOpts = {
-    height: "250",
+    height: "350",
     width: "450",
     playerVars: {
       autoplay: 0,
@@ -49,27 +49,20 @@ const Playing = () => {
     }
   }, [isPlaying]);
 
-  // useEffect(() => {
-  //   if (videoId) {
-  //     axios
-  //       .get("https://www.googleapis.com/youtube/v3/videos", {
-  //         params: {
-  //           key: "YOUR_API_KEY",
-  //           part: "contentDetails",
-  //           id: videoId,
-  //         },
-  //       })
-  //       .then((ress) => {
-  //         console.log(ress.data);
-  //       })
-  //       .catch((err) => {
-  //         console.error(err);
-  //       });
-  //   }
-  // }, [videoId]);
-
   const volumeOnOrOff = (condition) => {
     setVolumeOn(condition);
+  };
+
+  const [volume, setVolume] = useState(50);
+
+  const setVideoVolume = (newVolume) => {
+    if (playerRef.current && playerRef.current.internalPlayer) {
+      playerRef.current.internalPlayer.setVolume(newVolume);
+      setVolume(newVolume);
+    }
+    if (newVolume === 0) {
+      setVolumeOn(false);
+    }
   };
 
   // const [currentTime, setCurrentTime] = useState();
@@ -84,11 +77,18 @@ const Playing = () => {
   //   return () => clearInterval(interval);
   // }, []);
 
+  const closePlaying = () => {
+    navigate(-1);
+  };
+
   return (
     <>
       <Headerbar />
       <div className="bg-playingBg min-h-playing fixed bottom-0 w-full rounded-t-[40px]">
-        <SlClose className="w-7 h-7 cursor-pointer drop-shadow-xl relative top-5 left-5" />
+        <SlClose
+          className="w-7 h-7 cursor-pointer drop-shadow-xl relative top-5 left-5"
+          onClick={() => closePlaying()}
+        />
         <div className="w-[450px] m-auto mt-20 ">
           <div className="rounded-xl my-10">
             <YouTube videoId={videoId} opts={videoOpts} ref={playerRef} />
@@ -122,7 +122,13 @@ const Playing = () => {
             <GrPowerCycle className="w-5 h-5 mx-4 cursor-pointer" />
           </div>
           <div className="w-[300px] m-auto relative">
-            <input type="range" />
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={volume}
+              onChange={(e) => setVideoVolume(parseInt(e.target.value))}
+            />
             {volumeOn ? (
               <IoVolumeHigh
                 className="-top-[18px] right-6 relative"

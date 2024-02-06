@@ -2,7 +2,13 @@ import { GoHeart, GoHeartFill } from "react-icons/go";
 import { PiListBold } from "react-icons/pi";
 import he from "he";
 import { useSelector, useDispatch } from "react-redux";
-import { addToPlaylist, removeFromPlaylist } from "../../store/musicSlice";
+import {
+  addToPlaylist,
+  removeFromPlaylist,
+  setCurrentSong,
+  switchPlaylist,
+} from "../../store/musicSlice";
+import axios from "axios";
 
 const SongList = ({ videoList, children, search }) => {
   const dispatch = useDispatch();
@@ -24,6 +30,7 @@ const SongList = ({ videoList, children, search }) => {
   };
 
   const pressLove = (condition, index) => {
+    const playlistName = "favorites";
     if (search) {
       const vl = videoList[index];
       const song = {
@@ -35,17 +42,58 @@ const SongList = ({ videoList, children, search }) => {
         title: vl.snippet.title,
         favorite: true,
       };
-      const playlistName = "favorites";
       if (condition) {
         dispatch(addToPlaylist({ playlistName, song: song }));
       } else {
         dispatch(removeFromPlaylist({ playlistName, songId: vl.id.videoId }));
       }
     } else {
-      const playlistName = "favorites";
       dispatch(
         removeFromPlaylist({ playlistName, songId: videoList[index].id })
       );
+    }
+  };
+
+  const getDataofVideo = (videoId) => {
+    axios
+      .get("https://www.googleapis.com/youtube/v3/videos", {
+        params: {
+          key: "AIzaSyCujisGM1ePBvGwD5waTQ1p9fSk8tcN8VI",
+          part: "contentDetails,snippet",
+          id: videoId,
+        },
+      })
+      .then((ress) => {
+        const videoContent = ress.data.items[0];
+        const song = {
+          id: videoContent.id,
+          duration: videoContent.duration,
+          channel: videoContent.snippet.channelTitle,
+          channelId: videoContent.snippet.channelId,
+          imgUrl: videoContent.snippet.thumbnails.default.url,
+          title: videoContent.snippet.title,
+        };
+        dispatch(setCurrentSong(song));
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  const playThisSong = (id) => {
+    if (search) {
+      getDataofVideo(id);
+    } else {
+      //   for (const playlistName in playlists) {
+      //     if (playlists.hasOwnProperty(playlistName)) {
+      //       if (playlistName === searchName) {
+      //         const matchedPlaylist = playlists[playlistName];
+      //
+      //       }
+      //     }
+      //   }
+      dispatch(setCurrentSong([]));
+      dispatch(switchPlaylist([]));
     }
   };
 
@@ -58,6 +106,7 @@ const SongList = ({ videoList, children, search }) => {
             <div
               className="grid grid-cols-[2.5fr,1fr,50px,50px,30px] gap-2 text-xs font-bold items-center px-6 py-1.5 cursor-pointer hover:bg-lightGray"
               key={search ? video.id.videoId : video.id}
+              onClick={() => playThisSong(search ? video.id.videoId : video.id)}
             >
               <div className="flex items-center">
                 <div className=" rounded min-w-[80px] min-h-[60px] mr-4">
@@ -99,7 +148,7 @@ const SongList = ({ videoList, children, search }) => {
 
       {!search && (
         <div className="bg-white text-xs py-2 px-6 border-y-[1px] border-gray">
-          n首歌曲 ╴ n分鐘
+          {videoList.length}首歌曲 ╴ n分鐘
         </div>
       )}
     </>

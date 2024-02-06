@@ -16,7 +16,7 @@ const musicSlice = createSlice({
       },
     },
     currentPlaylist: null,
-    currentSong: null,
+    currentSong: "5e3rKInegeU",
     isPlaying: false,
   },
   reducers: {

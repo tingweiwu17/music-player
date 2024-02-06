@@ -51,7 +51,7 @@ const Searching = () => {
             .get("https://www.googleapis.com/youtube/v3/videos", {
               params: {
                 key: "AIzaSyCujisGM1ePBvGwD5waTQ1p9fSk8tcN8VI",
-                part: "contentDetails",
+                part: "contentDetails,snippet",
                 id: videoId,
               },
             })

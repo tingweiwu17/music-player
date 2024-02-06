@@ -10,12 +10,13 @@ import { GrPowerCycle } from "react-icons/gr";
 import { useSelector, useDispatch } from "react-redux";
 import { togglePlayPause } from "../../store/musicSlice";
 import { IoMdVolumeOff } from "react-icons/io";
-
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 const Footer = () => {
   const isPlaying = useSelector((state) => state.music.isPlaying);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [volumeOn, setVolumeOn] = useState(true);
 
@@ -23,9 +24,16 @@ const Footer = () => {
     setVolumeOn(condition);
   };
 
+  const toPlaying = () => {
+    navigate("/playing");
+  };
+
   return (
     <>
-      <div className="fixed bottom-0 flex bg-white h-[80px] justify-between items-center w-full z-80 p-4 border-t-[1px] border-lightGray">
+      <div
+        className="fixed bottom-0 flex bg-white h-[80px] cursor-pointer justify-between items-center w-full z-80 p-4 border-t-[1px] border-lightGray"
+        onClick={() => toPlaying()}
+      >
         <div className="flex items-center">
           <div className="bg-themeBlue rounded-md w-[60px] h-[60px]"></div>
           <div className="flex flex-col text-sm ml-3 font-bold">
