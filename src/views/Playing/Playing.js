@@ -16,6 +16,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { togglePlayPause } from "../../components/store/musicSlice";
 import YouTube from "react-youtube";
 import { useNavigate } from "react-router-dom";
+import he from "he";
 
 const Playing = () => {
   const [volumeOn, setVolumeOn] = useState(true);
@@ -23,7 +24,9 @@ const Playing = () => {
   const dispatch = useDispatch();
   const isPlaying = useSelector((state) => state.music.isPlaying);
   const videoId = useSelector((state) => state.music.currentSong.id);
+  const currSong = useSelector((state) => state.music.currentSong);
   const navigate = useNavigate();
+  const [lengthofsong, setLengthofsong] = useState(0);
 
   const videoOpts = {
     height: "350",
@@ -52,7 +55,7 @@ const Playing = () => {
   const volumeOnOrOff = (condition) => {
     setVolumeOn(condition);
     if (condition) {
-    } else {
+      setVolume(30);
     }
   };
 
@@ -65,24 +68,73 @@ const Playing = () => {
     }
     if (newVolume === 0) {
       setVolumeOn(false);
+    } else {
+      setVolumeOn(true);
     }
   };
 
-  // const [currentTime, setCurrentTime] = useState();
+  const [currentTime, setCurrentTime] = useState(0);
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     if (playerRef.current && playerRef.current.internalPlayer) {
-  //       setCurrentTime(playerRef.current.internalPlayer.getCurrentTime());
-  //     }
-  //   }, 1000);
-  //   console.log(currentTime);
-  //   return () => clearInterval(interval);
-  // }, []);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (isPlaying && playerRef.current && playerRef.current.internalPlayer) {
+        playerRef.current.internalPlayer
+          .getCurrentTime()
+          .then((currentTime) => {
+            setCurrentTime(Math.floor(currentTime));
+          });
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [currentTime, isPlaying]);
 
   const closePlaying = () => {
     navigate(-1);
   };
+
+  const timeToSeconds = (timeString) => {
+    const timeArray = timeString.split(":").map(Number);
+    let totalSeconds = 0;
+
+    if (timeArray.length === 3) {
+      totalSeconds += timeArray[0] * 3600;
+      totalSeconds += timeArray[1] * 60;
+      totalSeconds += timeArray[2];
+    } else if (timeArray.length === 2) {
+      totalSeconds += timeArray[0] * 60;
+      totalSeconds += timeArray[1];
+    }
+
+    return totalSeconds;
+  };
+
+  const formatTime = (seconds) => {
+    let hours = Math.floor(seconds / 3600);
+    let minutes = Math.floor((seconds % 3600) / 60);
+    let remainingSeconds = Math.floor(seconds % 60);
+
+    hours = hours < 10 ? "0" + hours : hours;
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    remainingSeconds =
+      remainingSeconds < 10 ? "0" + remainingSeconds : remainingSeconds;
+
+    let timeString = hours + ":" + minutes + ":" + remainingSeconds;
+
+    if (hours === "00") {
+      timeString = minutes + ":" + remainingSeconds;
+    }
+
+    return timeString;
+  };
+
+  useEffect(() => {
+    if (currSong.duration) {
+      const percent = Math.round(
+        (currentTime / timeToSeconds(currSong.duration)) * 100
+      );
+      setLengthofsong(percent);
+    }
+  }, [currSong, currentTime]);
 
   return (
     <>
@@ -96,16 +148,20 @@ const Playing = () => {
           <div className="rounded-xl my-10">
             <YouTube videoId={videoId} opts={videoOpts} ref={playerRef} />
           </div>
-          <p className="text-center font-bold">Song in the playlist</p>
-          <p className="text-center  pb-8  relative">- Singer of the song -</p>
+          <p className="text-center font-bold">
+            {currSong.title && he.decode(currSong.title)}
+          </p>
+          <p className="text-center text-sm  pb-8  relative mt-1">
+            - {currSong.channel} -
+          </p>
           <input type="range" />
           <p
             className="bg-white h-1.5 relative rounded -top-2.5"
-            style={{ width: "50%" }}
+            style={{ width: `${lengthofsong}%` }}
           ></p>
-          <div className="flex justify-between mt-2 text-xs">
-            <span>01:00</span>
-            <span>03:00</span>
+          <div className="flex justify-between text-xs">
+            <span>{formatTime(currentTime)}</span>
+            <span>{currSong.duration}</span>
           </div>
           <div className="flex justify-center items-center mt-2 mb-6">
             <LiaRandomSolid className="w-5 h-5  mx-4 cursor-pointer active:drop-shadow-none" />

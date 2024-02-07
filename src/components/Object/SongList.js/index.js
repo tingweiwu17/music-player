@@ -83,17 +83,20 @@ const SongList = ({ videoList, children, search }) => {
   const playThisSong = (id) => {
     if (search) {
       getDataofVideo(id);
-    } else {
-      //   for (const playlistName in playlists) {
-      //     if (playlists.hasOwnProperty(playlistName)) {
-      //       if (playlistName === searchName) {
-      //         const matchedPlaylist = playlists[playlistName];
-      //
-      //       }
-      //     }
-      //   }
-      dispatch(setCurrentSong([]));
       dispatch(switchPlaylist([]));
+    } else {
+      for (const playlistName in playlists) {
+        if (playlists.hasOwnProperty(playlistName)) {
+          if (playlistName === "favorites") {
+            const matchedPlaylist = playlists[playlistName];
+            dispatch(switchPlaylist(matchedPlaylist));
+            const songId = matchedPlaylist.songs.findIndex(
+              (item) => item.id === id
+            );
+            dispatch(setCurrentSong(matchedPlaylist.songs[songId]));
+          }
+        }
+      }
     }
   };
 
