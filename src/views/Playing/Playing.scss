@@ -1,28 +1,29 @@
 input[type="range"] {
+  -webkit-appearance: none; 
+  appearance: none;
   width: 100%;
-  height: 10px;
-  background: linear-gradient(to right, #fff 0%, #fff 50%, #808080 50%, #808080 100%);
+  height: 2px; 
+  background: white; 
+  border-radius: 5px; 
+  outline: none; 
+}
 
-  &::-webkit-slider-thumb {
-    width: 20px;
-    height: 20px;
-    background: #fff;
-    border-radius: 50%;
-    border: 2px solid #000;
-    cursor: pointer;
-    position: relative;
-    top: -2px;
-    z-index: 2; // 确保滑块位于背景之上
-  }
+input[type="range"]:active,
+input[type="range"]:focus {
+  outline: none;
+}
 
-  &:hover::-webkit-slider-thumb {
-    background: #ccc; 
-  }
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; 
+  appearance: none;
+  width: 10px; 
+  height: 10px; 
+  background: white;
+  border-radius: 50%; 
+  cursor: pointer;
+}
 
-  &::-webkit-slider-runnable-track {
-    // background: linear-gradient(to right, #808080 0%, #808080 calc(50% - #{$value * 1.2}px), #fff calc(50% - #{$value * 1.2}px), #fff 100%);
-    height: 10px;
-    position: relative;
-    z-index: 1; // 确保轨道位于滑块之下
-  }
+input[type="range"]::-webkit-slider-thumb:hover{
+  width: 12px;
+  height:12px;
 }

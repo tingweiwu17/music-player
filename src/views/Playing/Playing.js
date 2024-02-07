@@ -51,6 +51,9 @@ const Playing = () => {
 
   const volumeOnOrOff = (condition) => {
     setVolumeOn(condition);
+    if (condition) {
+    } else {
+    }
   };
 
   const [volume, setVolume] = useState(50);
@@ -94,10 +97,12 @@ const Playing = () => {
             <YouTube videoId={videoId} opts={videoOpts} ref={playerRef} />
           </div>
           <p className="text-center font-bold">Song in the playlist</p>
-          <p className="text-center border-b pb-8 border-white">
-            - Singer of the song -
-          </p>
-          <p></p>
+          <p className="text-center  pb-8  relative">- Singer of the song -</p>
+          <input type="range" />
+          <p
+            className="bg-white h-1.5 relative rounded -top-2.5"
+            style={{ width: "50%" }}
+          ></p>
           <div className="flex justify-between mt-2 text-xs">
             <span>01:00</span>
             <span>03:00</span>
@@ -124,19 +129,24 @@ const Playing = () => {
           <div className="w-[300px] m-auto relative">
             <input
               type="range"
+              className="z-5 cursor-pointer"
               min="0"
               max="100"
               value={volume}
               onChange={(e) => setVideoVolume(parseInt(e.target.value))}
             />
+            <p
+              className="bg-white h-1.5 relative rounded -top-2.5"
+              style={{ width: `${volume}%` }}
+            ></p>
             {volumeOn ? (
               <IoVolumeHigh
-                className="-top-[18px] right-6 relative"
+                className="-top-5 right-6 relative"
                 onClick={() => volumeOnOrOff(false)}
               />
             ) : (
               <IoMdVolumeOff
-                className="-top-[18px] right-6 relative"
+                className="-top-5 right-6 relative"
                 onClick={() => volumeOnOrOff(true)}
               />
             )}
