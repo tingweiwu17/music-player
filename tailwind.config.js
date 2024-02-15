@@ -7,7 +7,7 @@ module.exports = {
         themeBlue: "rgba(0, 137, 209, 0.5)",
         themeGreen: "rgba(2, 182, 179, 0.5)",
         grayBg: "rgba(0,0,0,0.5)",
-        playingBg: "rgba(235,241,244,0.5)",
+        playingBg: "rgba(166, 208, 230, 1)",
         lightGray: "rgb(225,225,225)",
       },
       fontSize: {

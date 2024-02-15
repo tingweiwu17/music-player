@@ -1,6 +1,4 @@
 import SideBar from "../../components/Object/Sidebar";
-import Footer from "../../components/Object/Footer";
-import Headerbar from "../../components/Object/Headerbar";
 import { useSelector } from "react-redux";
 import SongList from "../../components/Object/SongList.js";
 import { GiMusicSpell } from "react-icons/gi";
@@ -14,7 +12,6 @@ const Song = () => {
 
   return (
     <>
-      <Headerbar />
       <SideBar>
         <div>
           <SongList videoList={videoList} search={false}>
@@ -50,7 +47,6 @@ const Song = () => {
           </SongList>
         </div>
       </SideBar>
-      <Footer />
     </>
   );
 };

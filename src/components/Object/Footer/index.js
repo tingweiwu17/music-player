@@ -10,13 +10,14 @@ import { GrPowerCycle } from "react-icons/gr";
 import { useSelector, useDispatch } from "react-redux";
 import { togglePlayPause } from "../../store/musicSlice";
 import { IoMdVolumeOff } from "react-icons/io";
-import { useNavigate } from "react-router-dom";
+import PlayingModal from "../../Modal/PlayingModal/PlayingModal";
 import { useState } from "react";
 
 const Footer = () => {
   const isPlaying = useSelector((state) => state.music.isPlaying);
+  const currentSong = useSelector((state) => state.music.currentSong);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const [openPlayModal, setOpenPlayModal] = useState(false);
 
   const [volumeOn, setVolumeOn] = useState(true);
 
@@ -24,21 +25,24 @@ const Footer = () => {
     setVolumeOn(condition);
   };
 
-  const toPlaying = () => {
-    navigate("/playing");
+  const toPlaying = (condition) => {
+    setOpenPlayModal(condition);
   };
 
   return (
     <>
+      <PlayingModal isOpen={openPlayModal} close={() => toPlaying(false)} />
       <div
-        className="fixed bottom-0 flex bg-white h-[80px] cursor-pointer justify-between items-center w-full z-80 p-4 border-t-[1px] border-lightGray"
-        onClick={() => toPlaying()}
+        className="fixed bottom-0 flex bg-white h-[80px] cursor-pointer justify-between items-center w-full z-20 p-4 border-t-[1px] border-lightGray"
+        onClick={() => toPlaying(true)}
       >
         <div className="flex items-center">
-          <div className="bg-themeBlue rounded-md w-[60px] h-[60px]"></div>
+          <div className="bg-black rounded-md w-[60px] h-[60px] flex items-center">
+            <img alt="thumnail of video" src={currentSong.imgUrl} />
+          </div>
           <div className="flex flex-col text-sm ml-3 font-bold">
-            <span>Name of song</span>
-            <span>Singer of song</span>
+            <span>{currentSong.title}</span>
+            <span>{currentSong.channel}</span>
           </div>
         </div>
 
@@ -65,11 +69,11 @@ const Footer = () => {
           <div className="flex items-center text-xs mt-2">
             <span>01:00</span>
             <p className="w-full h-[2px] bg-grayBg mx-3"> </p>
-            <span>03:00</span>
+            <span>{currentSong.duration}</span>
           </div>
         </div>
         <div className="w-[170px] relative">
-          <input type="range" className="relative" />
+          <input type="range" className="relative text-grayBg" />
           {volumeOn ? (
             <IoVolumeHigh
               className=" right-6 relative"

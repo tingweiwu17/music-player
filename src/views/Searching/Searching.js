@@ -1,6 +1,4 @@
-import Headerbar from "../../components/Object/Headerbar";
 import SideBar from "../../components/Object/Sidebar";
-import Footer from "../../components/Object/Footer";
 import { CiSearch } from "react-icons/ci";
 import { FormProvider, useForm } from "react-hook-form";
 import axios from "axios";
@@ -28,6 +26,9 @@ const Searching = () => {
     if (parts[i + 2] < 10) {
       parts[i + 2] = "0" + parts[i + 2];
     }
+    if (parts.length === 1) {
+      parts.unshift("00");
+    }
     return parts.join(":");
   }
 
@@ -39,7 +40,7 @@ const Searching = () => {
           part: "id,snippet",
           q: watchInput,
           type: "video",
-          maxResults: 5,
+          maxResults: 10,
         },
       })
       .then((res) => {
@@ -73,7 +74,6 @@ const Searching = () => {
               console.error("取得影片資訊時錯誤：", err);
             });
         }
-        console.log(videoList);
       })
       .catch((error) => {
         console.error("搜尋發生錯誤：", error);
@@ -82,7 +82,6 @@ const Searching = () => {
 
   return (
     <>
-      <Headerbar />
       <SideBar>
         <div>
           <FormProvider {...methods}>
@@ -91,6 +90,7 @@ const Searching = () => {
               onSubmit={methods.handleSubmit(getSearch)}
             >
               <input
+                autoFocus={true}
                 className="p-2 indent-1 text-xs  w-[300px] h-8 border-2 rounded-3xl"
                 placeholder="Search..."
                 {...methods.register("search-word", { required: true })}
@@ -98,6 +98,7 @@ const Searching = () => {
               <CiSearch
                 className="text-white w-6 h-6 ml-2 cursor-pointer"
                 type="submit"
+                onClick={getSearch}
               />
             </form>
           </FormProvider>
@@ -115,7 +116,6 @@ const Searching = () => {
           </SongList>
         </div>
       </SideBar>
-      <Footer />
     </>
   );
 };

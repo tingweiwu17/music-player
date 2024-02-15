@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import Headerbar from "../../components/Object/Headerbar";
 import { BsFillMusicPlayerFill } from "react-icons/bs";
 
 const Frontpage = () => {
@@ -9,7 +8,6 @@ const Frontpage = () => {
   };
   return (
     <>
-      <Headerbar />
       <div className="flex mb-10 justify-center items-baseline pt-[250px]">
         <BsFillMusicPlayerFill className="text-white w-20 h-20 mx-10" />
         <BsFillMusicPlayerFill className="text-white w-20 h-20 mx-10" />
