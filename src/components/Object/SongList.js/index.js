@@ -147,11 +147,11 @@ const SongList = ({ videoList, children, search }) => {
         {videoList.length > 0 &&
           videoList.map((video, index) => (
             <div
-              className="grid grid-cols-[2.5fr,1fr,50px,50px,30px] gap-2 text-xs font-bold items-center px-6 py-1.5 cursor-pointer hover:bg-lightGray"
+              className="grid grid-cols-[2.5fr,1fr,50px,50px,30px] relative gap-2 text-xs font-bold items-center px-6 py-1.5 cursor-pointer hover:bg-lightGray"
               key={search ? video.id.videoId : video.id}
               onClick={() => playThisSong(search ? video.id.videoId : video.id)}
             >
-              <div className="flex items-center">
+              <div className="flex items-center ">
                 <div className=" rounded min-w-[80px] min-h-[60px] mr-4">
                   <img
                     className="w-[90px] h-[60px] rounded"
@@ -190,11 +190,11 @@ const SongList = ({ videoList, children, search }) => {
               )}
               <p className="text-center">{video.duration}</p>
               <PiListBold
-                className="w-5 h-5 relative hover:text-themeGreen"
+                className="w-4 h-4 hover:text-themeGreen"
                 onClick={() => moreAboutSong(index)}
               />
               {moreAction[index] && (
-                <ul className="absolute bg-white py-1 rounded drop-shadow-lg right-16">
+                <ul className="absolute bg-white py-1 rounded drop-shadow-lg right-8 top-10 z-30">
                   <li>加入清單</li>
                   <li>從播放列表中移除</li>
                 </ul>
