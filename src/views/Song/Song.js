@@ -4,10 +4,18 @@ import SongList from "../../components/Object/SongList.js";
 import { GiMusicSpell } from "react-icons/gi";
 import { FaPlay } from "react-icons/fa6";
 import { FaRandom } from "react-icons/fa";
+import { useParams } from "react-router-dom";
 
 const Song = () => {
+  const { playlistName } = useParams();
   const videoList = useSelector(
-    (state) => state.music.playlists.favorites.songs
+    (state) => state.music.playlists[playlistName]?.songs || []
+  );
+  const description = useSelector(
+    (state) => state.music.playlists[playlistName]?.description || []
+  );
+  const name = useSelector(
+    (state) => state.music.playlists[playlistName]?.name || []
   );
 
   return (
@@ -30,11 +38,8 @@ const Song = () => {
                 </div>
               </div>
               <div>
-                <h2 className="text-black">Playlist name</h2>
-                <p className="text-xs mt-1.5">
-                  description of playlist description of playlist description of
-                  playlist description of playlist
-                </p>
+                <h2 className="text-black">{name}</h2>
+                <p className="text-xs mt-1.5">{description}</p>
               </div>
             </div>
             <div className="grid grid-cols-[2.5fr,1fr,50px,50px,30px] bg-white text-xs py-2 px-6 border-y-[1px] border-gray">

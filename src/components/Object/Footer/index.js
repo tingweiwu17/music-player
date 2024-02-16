@@ -12,13 +12,13 @@ import { togglePlayPause } from "../../store/musicSlice";
 import { IoMdVolumeOff } from "react-icons/io";
 import PlayingModal from "../../Modal/PlayingModal/PlayingModal";
 import { useState } from "react";
+import he from "he";
 
 const Footer = () => {
   const isPlaying = useSelector((state) => state.music.isPlaying);
   const currentSong = useSelector((state) => state.music.currentSong);
   const dispatch = useDispatch();
   const [openPlayModal, setOpenPlayModal] = useState(false);
-
   const [volumeOn, setVolumeOn] = useState(true);
 
   const volumeOnOrOff = (condition) => {
@@ -33,42 +33,42 @@ const Footer = () => {
     <>
       <PlayingModal isOpen={openPlayModal} close={() => toPlaying(false)} />
       <div
-        className="fixed bottom-0 flex bg-white h-[80px] cursor-pointer justify-between items-center w-full z-20 p-4 border-t-[1px] border-lightGray"
+        className="fixed bottom-0 flex bg-white h-[70px] cursor-pointer justify-between items-center w-full z-20 p-4 border-t-[1px] border-lightGray"
         onClick={() => toPlaying(true)}
       >
         <div className="flex items-center">
-          <div className="bg-black rounded-md w-[60px] h-[60px] flex items-center">
+          <div className="bg-black rounded-md w-[50px] h-[50px] flex items-center">
             <img alt="thumnail of video" src={currentSong.imgUrl} />
           </div>
           <div className="flex flex-col text-sm ml-3 font-bold">
-            <span>{currentSong.title}</span>
+            <span>{currentSong ? he.decode(currentSong.title) : ""}</span>
             <span>{currentSong.channel}</span>
           </div>
         </div>
 
         <div>
           <div className="flex justify-center w-[600px] items-center">
-            <LiaRandomSolid className="w-5 h-5  mx-4" />
-            <div className="flex justify-center ">
-              <IoPlayBack className="w-8 h-8  mx-2" />
+            <LiaRandomSolid className="w-4 h-4 mx-4" />
+            <div className="flex justify-center items-center">
+              <IoPlayBack className="w-6 h-6  mx-2" />
               {!isPlaying ? (
                 <IoPlay
-                  className="w-8 h-8  mx-2 drop-shadow-lg cursor-pointer"
+                  className="w-7 h-7 mx-2 drop-shadow-lg cursor-pointer"
                   onClick={() => dispatch(togglePlayPause())}
                 />
               ) : (
                 <IoPause
-                  className="w-8 h-8  mx-2 drop-shadow-lg cursor-pointer"
+                  className="w-7 h-7 mx-2 drop-shadow-lg cursor-pointer"
                   onClick={() => dispatch(togglePlayPause())}
                 />
               )}
-              <IoPlayForward className="w-8 h-8  mx-2" />
+              <IoPlayForward className="w-6 h-6  mx-2" />
             </div>
-            <GrPowerCycle className="w-5 h-5  mx-4" />
+            <GrPowerCycle className="w-4 h-4 mx-4" />
           </div>
-          <div className="flex items-center text-xs mt-2">
-            <span>01:00</span>
-            <p className="w-full h-[2px] bg-grayBg mx-3"> </p>
+          <div className="flex items-center justify-center text-xs mt-1">
+            <span>00:00</span>
+            <p className="w-[60%] h-[2px] bg-grayBg mx-3"> </p>
             <span>{currentSong.duration}</span>
           </div>
         </div>

@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { GiMusicSpell } from "react-icons/gi";
+import { Link } from "react-router-dom";
 
 const SideBar = ({ children }) => {
   const [newList, setNewList] = useState(false);
@@ -17,10 +18,6 @@ const SideBar = ({ children }) => {
 
   const toSearchingPage = () => {
     navigate("/searching");
-  };
-
-  const toSongPage = () => {
-    navigate("/song");
   };
 
   return (
@@ -45,14 +42,16 @@ const SideBar = ({ children }) => {
           />
         </div>
         {Object.keys(allPlayList).map((playlistName) => (
-          <div
+          <Link
+            to={`/song/${playlistName}`}
             key={playlistName}
             className="cursor-pointer ml-4 flex items-center"
-            onClick={toSongPage}
           >
             <GiMusicSpell className="mr-2" />
-            <p className="font-bold drop-shadow-sm">{playlistName}</p>
-          </div>
+            <p className="font-bold drop-shadow-sm">
+              {allPlayList[playlistName].name}
+            </p>
+          </Link>
         ))}
         <NewListModal isOpen={newList} close={() => openNewList(false)} />
       </div>

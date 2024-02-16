@@ -25,6 +25,7 @@ const PlayingModal = ({ isOpen, close }) => {
   const videoId = useSelector((state) => state.music.currentSong.id);
   const currSong = useSelector((state) => state.music.currentSong);
   const [lengthofsong, setLengthofsong] = useState(0);
+  const currentPlaylist = useSelector((state) => state.music.currentPlaylist);
 
   const customModalStyle = {
     overlay: {
@@ -91,8 +92,10 @@ const PlayingModal = ({ isOpen, close }) => {
 
   const handleSchedule = (e) => {
     const time = parseFloat(e.target.value);
-    playerRef.current.currentTime = time;
     setCurrentTime(time);
+    if (playerRef.current && playerRef.current.internalPlayer) {
+      playerRef.current.internalPlayer.seekTo(time, true);
+    }
   };
 
   useEffect(() => {
@@ -148,10 +151,15 @@ const PlayingModal = ({ isOpen, close }) => {
   useEffect(() => {
     if (currSong.duration) {
       const percent =
-        Math.round(currentTime / timeToSeconds(currSong.duration)) * 100();
+        Math.round(currentTime / timeToSeconds(currSong.duration)) * 100;
       setLengthofsong(percent);
     }
   }, [currSong, currentTime]);
+
+  const nextSong = () => {
+    if (currentPlaylist !== null) {
+    }
+  };
 
   return (
     <>
@@ -176,7 +184,7 @@ const PlayingModal = ({ isOpen, close }) => {
               value={Math.floor(currentTime)}
               min={0}
               max={timeToSeconds(currSong.duration)}
-              onChange={(e) => handleSchedule()}
+              onChange={(e) => handleSchedule(e)}
             />
             <p
               className="bg-white h-1.5 relative rounded -top-2.5"
@@ -201,7 +209,10 @@ const PlayingModal = ({ isOpen, close }) => {
                     onClick={() => dispatch(togglePlayPause())}
                   />
                 )}
-                <IoPlayForward className="w-8 h-8 text-white mx-2 drop-shadow-lg cursor-pointer active:drop-shadow-none" />
+                <IoPlayForward
+                  className="w-8 h-8 text-white mx-2 drop-shadow-lg cursor-pointer active:drop-shadow-none"
+                  onClick={() => nextSong()}
+                />
               </div>
               <GrPowerCycle className="w-5 h-5 mx-4 cursor-pointer" />
             </div>

@@ -9,10 +9,17 @@ import {
   switchPlaylist,
 } from "../../store/musicSlice";
 import axios from "axios";
+import { useParams } from "react-router-dom";
+import { useState } from "react";
+import "./SongList.scss";
 
 const SongList = ({ videoList, children, search }) => {
   const dispatch = useDispatch();
   const playlists = useSelector((state) => state.music.playlists);
+  const { playlistName } = useParams();
+  const [moreAction, setMoreAction] = useState(
+    Array(videoList.length).fill(false)
+  );
 
   const isSongInFavorites = (playlists, songId) => {
     if (search) {
@@ -54,6 +61,28 @@ const SongList = ({ videoList, children, search }) => {
     }
   };
 
+  function formatTime(duration) {
+    duration = duration.replace("PT", "");
+    duration = duration.replace("H", ":").replace("M", ":").replace("S", "");
+    const parts = duration.split(":").map((part) => parseInt(part));
+    let i;
+    if (parts.length === 3) {
+      i = 0;
+    } else {
+      i = -1;
+    }
+    if (parts[i + 1] < 10) {
+      parts[i + 1] = "0" + parts[i + 1];
+    }
+    if (parts[i + 2] < 10) {
+      parts[i + 2] = "0" + parts[i + 2];
+    }
+    if (parts.length === 1) {
+      parts.unshift("00");
+    }
+    return parts.join(":");
+  }
+
   const getDataofVideo = (videoId) => {
     axios
       .get("https://www.googleapis.com/youtube/v3/videos", {
@@ -67,7 +96,7 @@ const SongList = ({ videoList, children, search }) => {
         const videoContent = ress.data.items[0];
         const song = {
           id: videoContent.id,
-          duration: videoContent.duration,
+          duration: formatTime(videoContent.contentDetails.duration),
           channel: videoContent.snippet.channelTitle,
           channelId: videoContent.snippet.channelId,
           imgUrl: videoContent.snippet.thumbnails.default.url,
@@ -85,10 +114,10 @@ const SongList = ({ videoList, children, search }) => {
       getDataofVideo(id);
       dispatch(switchPlaylist([]));
     } else {
-      for (const playlistName in playlists) {
+      for (const plName in playlists) {
         if (playlists.hasOwnProperty(playlistName)) {
-          if (playlistName === "favorites") {
-            const matchedPlaylist = playlists[playlistName];
+          if (plName === playlistName) {
+            const matchedPlaylist = playlists[plName];
             dispatch(switchPlaylist(matchedPlaylist));
             const songId = matchedPlaylist.songs.findIndex(
               (item) => item.id === id
@@ -98,6 +127,17 @@ const SongList = ({ videoList, children, search }) => {
         }
       }
     }
+  };
+
+  const moreAboutSong = (index) => {
+    const newShow = moreAction.map((item, id) => {
+      if (id === index) {
+        return !item;
+      } else {
+        return item;
+      }
+    });
+    setMoreAction(newShow);
   };
 
   return (
@@ -127,7 +167,6 @@ const SongList = ({ videoList, children, search }) => {
                     : he.decode(video.title)}
                 </p>
               </div>
-
               <p>{search ? video.snippet.channelTitle : video.channel}</p>
               {!isSongInFavorites(
                 playlists,
@@ -135,16 +174,31 @@ const SongList = ({ videoList, children, search }) => {
               ) ? (
                 <GoHeart
                   className="hover:text-themeBlue"
-                  onClick={() => pressLove(true, index)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    pressLove(true, index);
+                  }}
                 />
               ) : (
                 <GoHeartFill
                   className="text-themeBlue"
-                  onClick={() => pressLove(false, index)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    pressLove(false, index);
+                  }}
                 />
               )}
               <p className="text-center">{video.duration}</p>
-              <PiListBold className="w-5 h-5" />
+              <PiListBold
+                className="w-5 h-5 relative hover:text-themeGreen"
+                onClick={() => moreAboutSong(index)}
+              />
+              {moreAction[index] && (
+                <ul className="absolute bg-white py-1 rounded drop-shadow-lg right-16">
+                  <li>加入清單</li>
+                  <li>從播放列表中移除</li>
+                </ul>
+              )}
             </div>
           ))}
       </div>

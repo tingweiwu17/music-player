@@ -13,22 +13,11 @@ const Searching = () => {
   function formatTime(duration) {
     duration = duration.replace("PT", "");
     duration = duration.replace("H", ":").replace("M", ":").replace("S", "");
-    const parts = duration.split(":").map((part) => parseInt(part));
-    let i;
-    if (parts.length === 3) {
-      i = 0;
-    } else {
-      i = -1;
-    }
-    if (parts[i + 1] < 10) {
-      parts[i + 1] = "0" + parts[i + 1];
-    }
-    if (parts[i + 2] < 10) {
-      parts[i + 2] = "0" + parts[i + 2];
-    }
+    let parts = duration.split(":").map((part) => parseInt(part));
     if (parts.length === 1) {
-      parts.unshift("00");
+      parts.unshift(0);
     }
+    parts = parts.map((part) => (part < 10 ? "0" + part : part));
     return parts.join(":");
   }
 

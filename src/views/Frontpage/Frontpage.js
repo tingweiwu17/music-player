@@ -4,7 +4,7 @@ import { BsFillMusicPlayerFill } from "react-icons/bs";
 const Frontpage = () => {
   const navigate = useNavigate();
   const startThePlaying = () => {
-    navigate("/song");
+    navigate("/searching");
   };
   return (
     <>

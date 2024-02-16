@@ -13,7 +13,7 @@ function App() {
         <Headerbar />
         <Routes>
           <Route exact path="/" Component={Frontpage} />
-          <Route path="/song" Component={Song} />
+          <Route path="/song/:playlistName" Component={Song} />
           <Route path="/searching" Component={Searching} />
         </Routes>
         <Footer />
