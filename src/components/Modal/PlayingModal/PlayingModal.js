@@ -12,7 +12,7 @@ import { useEffect, useState, useRef } from "react";
 import { IoMdVolumeOff } from "react-icons/io";
 import "./PlayingModal.scss";
 import { useSelector, useDispatch } from "react-redux";
-import { togglePlayPause } from "../../store/musicSlice";
+import { togglePlayPause, setCurrentSong } from "../../store/musicSlice";
 import YouTube from "react-youtube";
 import he from "he";
 import Modal from "react-modal";
@@ -158,8 +158,20 @@ const PlayingModal = ({ isOpen, close }) => {
 
   const nextSong = () => {
     if (currentPlaylist !== null) {
+      console.log(currentPlaylist.songs);
+      const songlist = currentPlaylist.songs;
+      const index = songlist.findIndex((item) => item.id === currSong.id);
+      dispatch(setCurrentSong(songlist[index + 1]));
+    } else {
+      return false;
     }
   };
+
+  // const playRandomInList = () => {
+  //   const musicList = [...videoList];
+  //   const randomIndex = Math.floor(Math.random() * musicList.length);
+
+  // };
 
   return (
     <>

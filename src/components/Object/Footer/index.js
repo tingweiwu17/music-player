@@ -48,23 +48,23 @@ const Footer = () => {
 
         <div>
           <div className="flex justify-center w-[500px] items-center">
-            <LiaRandomSolid className="w-4 h-4 mx-4" />
+            <LiaRandomSolid className="w-4 h-4 mx-4 hover:text-themeBlue" />
             <div className="flex justify-center items-center">
-              <IoPlayBack className="w-6 h-6  mx-2" />
+              <IoPlayBack className="w-6 h-6 mx-2 hover:text-themeBlue" />
               {!isPlaying ? (
                 <IoPlay
-                  className="w-7 h-7 mx-2 drop-shadow-lg cursor-pointer"
+                  className="w-7 h-7 mx-2 drop-shadow-lg cursor-pointer hover:text-themeBlue"
                   onClick={() => dispatch(togglePlayPause())}
                 />
               ) : (
                 <IoPause
-                  className="w-7 h-7 mx-2 drop-shadow-lg cursor-pointer"
+                  className="w-7 h-7 mx-2 drop-shadow-lg cursor-pointer hover:text-themeBlue"
                   onClick={() => dispatch(togglePlayPause())}
                 />
               )}
-              <IoPlayForward className="w-6 h-6  mx-2" />
+              <IoPlayForward className="w-6 h-6 mx-2 hover:text-themeBlue" />
             </div>
-            <GrPowerCycle className="w-4 h-4 mx-4" />
+            <GrPowerCycle className="w-4 h-4 mx-4 hover:text-themeBlue" />
           </div>
           <div className="flex items-center justify-center text-xs mt-1">
             <span>00:00</span>

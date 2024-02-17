@@ -37,7 +37,7 @@ const SideBar = ({ children }) => {
         <div className="flex justify-between mt-3 text-xs">
           播放清單
           <RiPlayListAddLine
-            className="cursor-pointer w-5 h-5 mb-2"
+            className="cursor-pointer w-4 h-4 mb-2"
             onClick={() => openNewList(true)}
           />
         </div>

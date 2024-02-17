@@ -8,7 +8,7 @@ const NewListModal = ({ isOpen, close }) => {
   const customModalStyle = {
     overlay: {
       backgroundColor: "transparent",
-      zIndex: "2",
+      zIndex: "40",
     },
     content: {
       height: "100vh",
@@ -55,11 +55,12 @@ const NewListModal = ({ isOpen, close }) => {
 
             <textarea
               className="bg-lightGray mt-2 px-2.5 py-2 rounded-xl text-xs"
+              placeholder="Description of this playlist..."
               {...methods.register("description", { required: true })}
             />
             <div className="flex justify-between mt-4 text-xs">
               <button
-                className="flex items-center text-white px-2.5 py-1.5 rounded-xl bg-themeGreen hover:bg-white hover:text-themeGreen"
+                className="flex items-center text-white px-2.5 py-1.5 rounded-xl bg-themeGreen hover:bg-white hover:text-themeGreen hover:border-themeGreen hover:border-[1px]"
                 onClick={close}
                 type="button"
               >

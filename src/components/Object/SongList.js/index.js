@@ -12,6 +12,10 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import "./SongList.scss";
+import NewListModal from "../../Modal/NewListModal/NewListModal";
+import { GiMusicSpell } from "react-icons/gi";
+import { RiPlayListAddLine } from "react-icons/ri";
+import { useEffect } from "react";
 
 const SongList = ({ videoList, children, search }) => {
   const dispatch = useDispatch();
@@ -20,6 +24,11 @@ const SongList = ({ videoList, children, search }) => {
   const [moreAction, setMoreAction] = useState(
     Array(videoList.length).fill(false)
   );
+  const [newList, setNewList] = useState();
+
+  useEffect(() => {
+    setMoreAction(Array(videoList.length).fill(false));
+  }, [videoList]);
 
   const isSongInFavorites = (playlists, songId) => {
     if (search) {
@@ -129,6 +138,10 @@ const SongList = ({ videoList, children, search }) => {
     }
   };
 
+  const openNewList = (condition) => {
+    setNewList(condition);
+  };
+
   const moreAboutSong = (index) => {
     const newShow = moreAction.map((item, id) => {
       if (id === index) {
@@ -151,10 +164,10 @@ const SongList = ({ videoList, children, search }) => {
               key={search ? video.id.videoId : video.id}
               onClick={() => playThisSong(search ? video.id.videoId : video.id)}
             >
-              <div className="flex items-center ">
+              <div className="flex items-center">
                 <div className=" rounded min-w-[80px] min-h-[60px] mr-4">
                   <img
-                    className="w-[90px] h-[60px] rounded"
+                    className="w-[90px] min-w-[90px] h-[60px] rounded"
                     src={
                       search ? video.snippet.thumbnails.high.url : video.imgUrl
                     }
@@ -191,18 +204,44 @@ const SongList = ({ videoList, children, search }) => {
               <p className="text-center">{video.duration}</p>
               <PiListBold
                 className="w-4 h-4 hover:text-themeGreen"
-                onClick={() => moreAboutSong(index)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  moreAboutSong(index);
+                }}
               />
               {moreAction[index] && (
-                <ul className="absolute bg-white py-1 rounded drop-shadow-lg right-8 top-10 z-30">
+                <ul className="absolute bg-white p-1 rounded drop-shadow-lg right-8 top-10 z-30">
                   <li>加入清單</li>
                   <li>從播放列表中移除</li>
+                  <li
+                    onClick={() => {
+                      pressLove(true, index);
+                      setMoreAction(Array(videoList.length).fill(false));
+                    }}
+                  >
+                    加入喜愛項目
+                  </li>
                 </ul>
               )}
+              <ul className="absolute bg-white py-1 px-2 rounded drop-shadow-md right-36 top-10 z-30">
+                <li
+                  onClick={() => openNewList(true)}
+                  className="flex items-center  border-b border-lightGray"
+                >
+                  新增播放清單
+                  <RiPlayListAddLine className="cursor-pointer w-3 h-3 ml-1" />
+                </li>
+                {Object.keys(playlists).map((key) => (
+                  <li key={key} className="flex items-center">
+                    <GiMusicSpell className="mr-2" />
+                    {playlists[key].name}
+                  </li>
+                ))}
+              </ul>
             </div>
           ))}
       </div>
-
+      <NewListModal isOpen={newList} close={() => openNewList(false)} />
       {!search && (
         <div className="bg-white text-xs py-2 px-6 border-y-[1px] border-gray">
           {videoList.length}首歌曲 ╴ n分鐘

@@ -1,4 +1,3 @@
-import "./App.css";
 import Frontpage from "./views/Frontpage/Frontpage";
 import Song from "./views/Song/Song";
 import Searching from "./views/Searching/Searching";
