@@ -13,6 +13,8 @@ import { IoMdVolumeOff } from "react-icons/io";
 import PlayingModal from "../../Modal/PlayingModal/PlayingModal";
 import { useState } from "react";
 import he from "he";
+import { PiMusicNotesFill } from "react-icons/pi";
+import classNames from "classnames";
 
 const Footer = () => {
   const isPlaying = useSelector((state) => state.music.isPlaying);
@@ -37,11 +39,27 @@ const Footer = () => {
         onClick={() => toPlaying(true)}
       >
         <div className="flex items-center w-[30%]">
-          <div className="bg-black rounded-md min-w-[50px] w-[50px] h-[50px] flex items-center">
-            <img alt="thumnail of video" src={currentSong.imgUrl} />
+          <div
+            className={classNames(
+              "bg-black rounded-md min-w-[50px] w-[50px] h-[50px] flex items-center",
+              {
+                "bg-white shadow-md justify-center":
+                  typeof currentSong !== Object,
+              }
+            )}
+          >
+            {typeof currentSong === Object ? (
+              <img alt="thumnail of video" src={currentSong.imgUrl} />
+            ) : (
+              <PiMusicNotesFill className="w-7 h-7" />
+            )}
           </div>
           <div className="flex flex-col text-xs ml-3 font-bold truncate">
-            <span>{currentSong ? he.decode(currentSong.title) : ""}</span>
+            <span>
+              {typeof currentSong === Object
+                ? he.decode(currentSong.title)
+                : ""}
+            </span>
             <span>- {currentSong.channel} -</span>
           </div>
         </div>
