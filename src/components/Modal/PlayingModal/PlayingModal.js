@@ -161,17 +161,15 @@ const PlayingModal = ({ isOpen, close }) => {
       console.log(currentPlaylist.songs);
       const songlist = currentPlaylist.songs;
       const index = songlist.findIndex((item) => item.id === currSong.id);
-      dispatch(setCurrentSong(songlist[index + 1]));
+      if (index + 2 < songlist.length) {
+        dispatch(setCurrentSong(songlist[index + 1]));
+      } else {
+        dispatch(setCurrentSong(songlist[0]));
+      }
     } else {
       return false;
     }
   };
-
-  // const playRandomInList = () => {
-  //   const musicList = [...videoList];
-  //   const randomIndex = Math.floor(Math.random() * musicList.length);
-
-  // };
 
   return (
     <>

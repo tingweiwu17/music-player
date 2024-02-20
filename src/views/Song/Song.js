@@ -5,6 +5,8 @@ import { GiMusicSpell } from "react-icons/gi";
 import { FaPlay } from "react-icons/fa6";
 import { FaRandom } from "react-icons/fa";
 import { useParams } from "react-router-dom";
+// import { setCurrentSong } from "../../components/store/musicSlice.js";
+// import { useDispatch } from "react-redux";
 
 const Song = () => {
   const { playlistName } = useParams();
@@ -17,6 +19,13 @@ const Song = () => {
   const name = useSelector(
     (state) => state.music.playlists[playlistName]?.name || []
   );
+  // const dispatch = useDispatch();
+
+  // const playRandomInList = () => {
+  //   const musicList = [...videoList];
+  //   const randomIndex = Math.floor(Math.random() * musicList.length);
+  //   dispatch(setCurrentSong(musicList[randomIndex]));
+  // };
 
   return (
     <>

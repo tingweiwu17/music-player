@@ -145,12 +145,29 @@ const SongList = ({ videoList, children, search }) => {
   const moreAboutSong = (index) => {
     const newShow = moreAction.map((item, id) => {
       if (id === index) {
+        if (item === true) {
+          handleMouseLeave(index);
+        }
         return !item;
       } else {
         return item;
       }
     });
     setMoreAction(newShow);
+  };
+
+  const [hoverStates, setHoverStates] = useState([]);
+
+  const handleMouseEnter = (index) => {
+    const newHoverStates = [...hoverStates];
+    newHoverStates[index] = true;
+    setHoverStates(newHoverStates);
+  };
+
+  const handleMouseLeave = (index) => {
+    const newHoverStates = [...hoverStates];
+    newHoverStates[index] = false;
+    setHoverStates(newHoverStates);
   };
 
   return (
@@ -211,7 +228,7 @@ const SongList = ({ videoList, children, search }) => {
               />
               {moreAction[index] && (
                 <ul className="absolute bg-white p-1 rounded drop-shadow-lg right-8 top-10 z-30">
-                  <li>加入清單</li>
+                  <li onMouseEnter={() => handleMouseEnter(index)}>加入清單</li>
                   <li>從播放列表中移除</li>
                   <li
                     onClick={() => {
@@ -223,21 +240,37 @@ const SongList = ({ videoList, children, search }) => {
                   </li>
                 </ul>
               )}
-              <ul className="absolute bg-white py-1 px-2 rounded drop-shadow-md right-36 top-10 z-30">
-                <li
-                  onClick={() => openNewList(true)}
-                  className="flex items-center  border-b border-lightGray"
+              {hoverStates[index] && (
+                <ul
+                  className="absolute bg-white py-1 px-2 rounded drop-shadow-md right-36 top-10 z-30"
+                  onMouseLeave={() => handleMouseLeave(index)}
                 >
-                  新增播放清單
-                  <RiPlayListAddLine className="cursor-pointer w-3 h-3 ml-1" />
-                </li>
-                {Object.keys(playlists).map((key) => (
-                  <li key={key} className="flex items-center">
-                    <GiMusicSpell className="mr-2" />
-                    {playlists[key].name}
+                  <li
+                    onClick={() => openNewList(true)}
+                    className="flex items-center  border-b border-lightGray"
+                  >
+                    新增播放清單
+                    <RiPlayListAddLine className="cursor-pointer w-3 h-3 ml-1" />
                   </li>
-                ))}
-              </ul>
+                  {Object.keys(playlists).map((key) => (
+                    <li
+                      key={key}
+                      className="flex items-center"
+                      onClick={() =>
+                        dispatch(
+                          addToPlaylist({
+                            playlistName: key,
+                            song: video,
+                          })
+                        )
+                      }
+                    >
+                      <GiMusicSpell className="mr-2" />
+                      {playlists[key].name}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           ))}
       </div>
