@@ -31,6 +31,8 @@ const Footer = () => {
     setOpenPlayModal(condition);
   };
 
+  console.log(typeof currentSong);
+
   return (
     <>
       <PlayingModal isOpen={openPlayModal} close={() => toPlaying(false)} />
@@ -43,12 +45,11 @@ const Footer = () => {
             className={classNames(
               "bg-black rounded-md min-w-[50px] w-[50px] h-[50px] flex items-center",
               {
-                "bg-white shadow-md justify-center":
-                  typeof currentSong !== Object,
+                "bg-white shadow-md justify-center": currentSong === "",
               }
             )}
           >
-            {typeof currentSong === Object ? (
+            {currentSong !== "" ? (
               <img alt="thumnail of video" src={currentSong.imgUrl} />
             ) : (
               <PiMusicNotesFill className="w-7 h-7" />
@@ -56,9 +57,7 @@ const Footer = () => {
           </div>
           <div className="flex flex-col text-xs ml-3 font-bold truncate">
             <span>
-              {typeof currentSong === Object
-                ? he.decode(currentSong.title)
-                : ""}
+              {currentSong !== "" ? he.decode(currentSong.title) : ""}
             </span>
             <span>- {currentSong.channel} -</span>
           </div>
