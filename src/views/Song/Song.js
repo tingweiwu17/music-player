@@ -5,8 +5,8 @@ import { GiMusicSpell } from "react-icons/gi";
 import { FaPlay } from "react-icons/fa6";
 import { FaRandom } from "react-icons/fa";
 import { useParams } from "react-router-dom";
-// import { setCurrentSong } from "../../components/store/musicSlice.js";
-// import { useDispatch } from "react-redux";
+import { setCurrentSong } from "../../components/store/musicSlice.js";
+import { useDispatch } from "react-redux";
 
 const Song = () => {
   const { playlistName } = useParams();
@@ -19,13 +19,15 @@ const Song = () => {
   const name = useSelector(
     (state) => state.music.playlists[playlistName]?.name || []
   );
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-  // const playRandomInList = () => {
-  //   const musicList = [...videoList];
-  //   const randomIndex = Math.floor(Math.random() * musicList.length);
-  //   dispatch(setCurrentSong(musicList[randomIndex]));
-  // };
+  const playRandomInList = () => {
+    const musicList = [...videoList];
+    const randomIndex = Math.floor(Math.random() * musicList.length);
+    dispatch(setCurrentSong(musicList[randomIndex]));
+  };
+
+  const playListinList = () => {};
 
   return (
     <>
@@ -36,11 +38,17 @@ const Song = () => {
               <div className=" w-[150px] h-[150px] shadow-xl rounded mr-4 relative">
                 <GiMusicSpell className="w-[100px] h-[100px] text-themeBlue m-[25px] drop-shadow-2xl relative" />
                 <div className="absolute flex left-[166px] bottom-0">
-                  <button className="flex items-center text-white bg-themeBlue py-1 w-20 mx-0.5 justify-center text-xs rounded">
+                  <button
+                    className="flex items-center text-white bg-themeBlue py-1 w-20 mx-0.5 justify-center text-xs rounded"
+                    onClick={() => playListinList()}
+                  >
                     <FaPlay className="mr-0.5" />
                     播放
                   </button>
-                  <button className="flex items-center text-white bg-themeBlue py-1 w-20 mx-0.5 justify-center text-xs rounded">
+                  <button
+                    className="flex items-center text-white bg-themeBlue py-1 w-20 mx-0.5 justify-center text-xs rounded"
+                    onClick={() => playRandomInList()}
+                  >
                     <FaRandom className="mr-0.5" />
                     隨機播放
                   </button>

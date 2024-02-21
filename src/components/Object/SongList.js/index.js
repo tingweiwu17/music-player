@@ -18,13 +18,14 @@ import { RiPlayListAddLine } from "react-icons/ri";
 import { useEffect } from "react";
 
 const SongList = ({ videoList, children, search }) => {
+  const [newList, setNewList] = useState();
+  const [hoverStates, setHoverStates] = useState([]);
   const dispatch = useDispatch();
   const playlists = useSelector((state) => state.music.playlists);
   const { playlistName } = useParams();
   const [moreAction, setMoreAction] = useState(
     Array(videoList.length).fill(false)
   );
-  const [newList, setNewList] = useState();
 
   useEffect(() => {
     setMoreAction(Array(videoList.length).fill(false));
@@ -146,7 +147,7 @@ const SongList = ({ videoList, children, search }) => {
     const newShow = moreAction.map((item, id) => {
       if (id === index) {
         if (item === true) {
-          handleMouseLeave(index);
+          handleMouseEnter(false, index);
         }
         return !item;
       } else {
@@ -156,17 +157,9 @@ const SongList = ({ videoList, children, search }) => {
     setMoreAction(newShow);
   };
 
-  const [hoverStates, setHoverStates] = useState([]);
-
-  const handleMouseEnter = (index) => {
+  const handleMouseEnter = (condition, index) => {
     const newHoverStates = [...hoverStates];
-    newHoverStates[index] = true;
-    setHoverStates(newHoverStates);
-  };
-
-  const handleMouseLeave = (index) => {
-    const newHoverStates = [...hoverStates];
-    newHoverStates[index] = false;
+    newHoverStates[index] = condition;
     setHoverStates(newHoverStates);
   };
 
@@ -227,9 +220,24 @@ const SongList = ({ videoList, children, search }) => {
                 }}
               />
               {moreAction[index] && (
-                <ul className="absolute bg-white p-1 rounded drop-shadow-lg right-8 top-10 z-30">
-                  <li onMouseEnter={() => handleMouseEnter(index)}>加入清單</li>
-                  <li>從播放列表中移除</li>
+                <ul className="absolute bg-white p-1 rounded drop-shadow-lg right-8 top-10 z-30 w-[112px]">
+                  <li onMouseEnter={() => handleMouseEnter(true, index)}>
+                    加入清單
+                  </li>
+                  {!search && (
+                    <li
+                      onClick={() =>
+                        dispatch(
+                          removeFromPlaylist({
+                            playlistName,
+                            songId: videoList[index].id,
+                          })
+                        )
+                      }
+                    >
+                      從播放列表中移除
+                    </li>
+                  )}
                   <li
                     onClick={() => {
                       pressLove(true, index);
@@ -243,7 +251,7 @@ const SongList = ({ videoList, children, search }) => {
               {hoverStates[index] && (
                 <ul
                   className="absolute bg-white py-1 px-2 rounded drop-shadow-md right-36 top-10 z-30"
-                  onMouseLeave={() => handleMouseLeave(index)}
+                  onMouseLeave={() => handleMouseEnter(true, index)}
                 >
                   <li
                     onClick={() => openNewList(true)}

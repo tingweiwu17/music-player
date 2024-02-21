@@ -15,6 +15,7 @@ import { useState } from "react";
 import he from "he";
 import { PiMusicNotesFill } from "react-icons/pi";
 import classNames from "classnames";
+import "./Footer.scss";
 
 const Footer = () => {
   const isPlaying = useSelector((state) => state.music.isPlaying);
@@ -30,8 +31,6 @@ const Footer = () => {
   const toPlaying = (condition) => {
     setOpenPlayModal(condition);
   };
-
-  console.log(typeof currentSong);
 
   return (
     <>
@@ -83,19 +82,31 @@ const Footer = () => {
             </div>
             <GrPowerCycle className="w-4 h-4 mx-4 hover:text-themeBlue" />
           </div>
-          <div className="flex items-center justify-center text-xs mt-1">
+          <div className="music-control flex relative items-center justify-center text-xs mt-1">
             <span>00:00</span>
-            <p className="w-[80%] h-[2px] bg-grayBg mx-3"> </p>
+            <input type="range" value={0} />
+            <div className="absolute w-[80%]">
+              <p className="w-[30%] h-1 bg-grayBg"> </p>
+            </div>
             <span>{currentSong.duration}</span>
           </div>
         </div>
-        <div className="w-[30%] flex justify-end items-center">
+        <div className="w-[30%] footer flex justify-end relative items-center">
           {volumeOn ? (
-            <IoVolumeHigh onClick={() => volumeOnOrOff(false)} />
+            <IoVolumeHigh
+              onClick={() => volumeOnOrOff(false)}
+              className="mr-2"
+            />
           ) : (
-            <IoMdVolumeOff onClick={() => volumeOnOrOff(true)} />
+            <IoMdVolumeOff
+              onClick={() => volumeOnOrOff(true)}
+              className="mr-2"
+            />
           )}
-          <input type="range" />
+          <input type="range" value={100} />
+          <div className="absolute w-[50%]">
+            <p className="w-[30%] h-1 bg-grayBg"> </p>
+          </div>
         </div>
       </div>
     </>

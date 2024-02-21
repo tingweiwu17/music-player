@@ -16,15 +16,18 @@ import { togglePlayPause, setCurrentSong } from "../../store/musicSlice";
 import YouTube from "react-youtube";
 import he from "he";
 import Modal from "react-modal";
+import { PiMusicNotesFill } from "react-icons/pi";
 
 const PlayingModal = ({ isOpen, close }) => {
+  const [volume, setVolume] = useState(100);
   const [volumeOn, setVolumeOn] = useState(true);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [lengthofsong, setLengthofsong] = useState(0);
   const playerRef = useRef(null);
   const dispatch = useDispatch();
   const isPlaying = useSelector((state) => state.music.isPlaying);
   const videoId = useSelector((state) => state.music.currentSong.id);
   const currSong = useSelector((state) => state.music.currentSong);
-  const [lengthofsong, setLengthofsong] = useState(0);
   const currentPlaylist = useSelector((state) => state.music.currentPlaylist);
 
   const customModalStyle = {
@@ -47,7 +50,7 @@ const PlayingModal = ({ isOpen, close }) => {
     height: "350",
     width: "450",
     playerVars: {
-      autoplay: 0,
+      autoplay: 1,
     },
   };
 
@@ -71,10 +74,10 @@ const PlayingModal = ({ isOpen, close }) => {
     setVolumeOn(condition);
     if (condition) {
       setVolume(30);
+    } else {
+      setVolume(0);
     }
   };
-
-  const [volume, setVolume] = useState(100);
 
   const setVideoVolume = (newVolume) => {
     if (playerRef.current && playerRef.current.internalPlayer) {
@@ -87,8 +90,6 @@ const PlayingModal = ({ isOpen, close }) => {
       setVolumeOn(true);
     }
   };
-
-  const [currentTime, setCurrentTime] = useState(0);
 
   const handleSchedule = (e) => {
     const time = parseFloat(e.target.value);
@@ -115,7 +116,6 @@ const PlayingModal = ({ isOpen, close }) => {
     if (timeString) {
       const timeArray = timeString.split(":").map(Number);
       let totalSeconds = 0;
-
       if (timeArray.length === 3) {
         totalSeconds += timeArray[0] * 3600;
         totalSeconds += timeArray[1] * 60;
@@ -124,7 +124,6 @@ const PlayingModal = ({ isOpen, close }) => {
         totalSeconds += timeArray[0] * 60;
         totalSeconds += timeArray[1];
       }
-
       return totalSeconds;
     }
   };
@@ -151,20 +150,35 @@ const PlayingModal = ({ isOpen, close }) => {
   useEffect(() => {
     if (currSong.duration) {
       const percent =
-        Math.round(currentTime / timeToSeconds(currSong.duration)) * 100;
+        (Math.round((currentTime / timeToSeconds(currSong.duration)) * 100) /
+          100) *
+        100;
       setLengthofsong(percent);
     }
   }, [currSong, currentTime]);
 
   const nextSong = () => {
     if (currentPlaylist !== null) {
-      console.log(currentPlaylist.songs);
       const songlist = currentPlaylist.songs;
       const index = songlist.findIndex((item) => item.id === currSong.id);
       if (index + 2 < songlist.length) {
         dispatch(setCurrentSong(songlist[index + 1]));
       } else {
         dispatch(setCurrentSong(songlist[0]));
+      }
+    } else {
+      return false;
+    }
+  };
+
+  const lastSong = () => {
+    if (currentPlaylist !== null) {
+      const songlist = currentPlaylist.songs;
+      const index = songlist.findIndex((item) => item.id === currSong.id);
+      if (index === 0) {
+        dispatch(setCurrentSong(songlist[songlist.length]));
+      } else {
+        dispatch(setCurrentSong(songlist[index - 1]));
       }
     } else {
       return false;
@@ -181,7 +195,16 @@ const PlayingModal = ({ isOpen, close }) => {
           />
           <div className="w-[450px] m-auto mt-20 ">
             <div className="rounded-xl my-10">
-              <YouTube videoId={videoId} opts={videoOpts} ref={playerRef} />
+              <YouTube
+                videoId={videoId}
+                opts={videoOpts}
+                ref={playerRef}
+                className="hidden"
+              />
+              <div className="w-[450px] h-[380px] bg-white shadow-2xl rounded-md flex items-center justify-center">
+                {/* <img alt="video thumnail" src={currSong.imgUrl} /> */}
+                <PiMusicNotesFill className="w-[250px] h-[250px] text-playingBg drop-shadow-md" />
+              </div>
             </div>
             <p className="text-center font-bold">
               {currSong.title && he.decode(currSong.title)}
@@ -207,7 +230,10 @@ const PlayingModal = ({ isOpen, close }) => {
             <div className="flex justify-center items-center mt-2 mb-6">
               <LiaRandomSolid className="w-5 h-5  mx-4 cursor-pointer active:drop-shadow-none" />
               <div className="flex justify-center ">
-                <IoPlayBack className="w-8 h-8 text-white mx-2 drop-shadow-lg cursor-pointer" />
+                <IoPlayBack
+                  className="w-8 h-8 text-white mx-2 drop-shadow-lg cursor-pointer"
+                  onClick={() => lastSong()}
+                />
                 {!isPlaying ? (
                   <IoPlay
                     className="w-8 h-8 text-white mx-2 drop-shadow-lg cursor-pointer active:drop-shadow-none"
