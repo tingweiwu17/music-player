@@ -10,9 +10,8 @@ import { LiaRandomSolid } from "react-icons/lia";
 import { GrPowerCycle } from "react-icons/gr";
 import { IoMdVolumeOff } from "react-icons/io";
 import "./PlayingModal.scss";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { togglePlayPause } from "../../store/musicSlice";
-import YouTube from "react-youtube";
 import he from "he";
 import Modal from "react-modal";
 import { PiMusicNotesFill } from "react-icons/pi";
@@ -23,11 +22,9 @@ const PlayingModal = ({
   lastSong,
   nextSong,
   currSong,
-  playerRef,
   timeToSeconds,
   handleSchedule,
   currentTime,
-  setCurrentTime,
   lengthofsong,
   formatStart,
   volume,
@@ -37,7 +34,6 @@ const PlayingModal = ({
   isPlaying,
 }) => {
   const dispatch = useDispatch();
-  const videoId = useSelector((state) => state.music.currentSong.id);
 
   const customModalStyle = {
     overlay: {
@@ -55,14 +51,6 @@ const PlayingModal = ({
     },
   };
 
-  const videoOpts = {
-    height: "350",
-    width: "450",
-    playerVars: {
-      autoplay: 1,
-    },
-  };
-
   return (
     <>
       <Modal ariaHideApp={false} style={customModalStyle} isOpen={isOpen}>
@@ -73,12 +61,6 @@ const PlayingModal = ({
           />
           <div className="w-[450px] m-auto mt-20 ">
             <div className="rounded-xl my-10">
-              <YouTube
-                videoId={videoId}
-                opts={videoOpts}
-                ref={playerRef}
-                className="hidden"
-              />
               <div className="w-[450px] h-[380px] bg-white shadow-2xl rounded-md flex items-center justify-center">
                 {/* <img alt="video thumnail" src={currSong.imgUrl} /> */}
                 <PiMusicNotesFill className="w-[250px] h-[250px] text-playingBg drop-shadow-md" />

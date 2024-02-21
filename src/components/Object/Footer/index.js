@@ -17,23 +17,26 @@ import { PiMusicNotesFill } from "react-icons/pi";
 import classNames from "classnames";
 import "./Footer.scss";
 import { setCurrentSong } from "../../store/musicSlice";
+import YouTube from "react-youtube";
 
 const Footer = () => {
   const isPlaying = useSelector((state) => state.music.isPlaying);
   const dispatch = useDispatch();
   const [openPlayModal, setOpenPlayModal] = useState(false);
-  // const [volumeOn, setVolumeOn] = useState(true);
   const currSong = useSelector((state) => state.music.currentSong);
   const currentPlaylist = useSelector((state) => state.music.currentPlaylist);
+  const videoId = useSelector((state) => state.music.currentSong.id);
   const playerRef = useRef(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [lengthofsong, setLengthofsong] = useState(0);
   const [volume, setVolume] = useState(100);
   const [volumeOn, setVolumeOn] = useState(true);
 
-  // const volumeOnOrOff = (condition) => {
-  //   setVolumeOn(condition);
-  // };
+  const videoOpts = {
+    playerVars: {
+      autoplay: 0,
+    },
+  };
 
   const toPlaying = (condition) => {
     setOpenPlayModal(condition);
@@ -169,6 +172,12 @@ const Footer = () => {
     return () => clearInterval(interval);
   }, [currentTime, isPlaying]);
 
+  useEffect(() => {
+    if (currentTime === timeToSeconds(currSong.duration) - 1) {
+      nextSong();
+    }
+  }, [currSong, currentTime]);
+
   return (
     <>
       <PlayingModal
@@ -284,6 +293,12 @@ const Footer = () => {
           </div>
         </div>
       </div>
+      <YouTube
+        videoId={videoId}
+        opts={videoOpts}
+        ref={playerRef}
+        className="hidden"
+      />
     </>
   );
 };

@@ -163,6 +163,34 @@ const SongList = ({ videoList, children, search }) => {
     setHoverStates(newHoverStates);
   };
 
+  const [totalTime, setTotalTime] = useState();
+
+  useEffect(() => {
+    const list = [...videoList];
+    const totalSeconds = list
+      .map((video) => {
+        const [minutes, seconds] = video.duration.split(":").map(Number);
+        return minutes * 60 + seconds;
+      })
+      .reduce((total, seconds) => total + seconds, 0);
+    let sec = totalSeconds;
+    let hours = Math.floor(sec / 3600);
+    sec %= 3600;
+    let minutes = Math.floor(sec / 60);
+    sec %= 60;
+
+    let formattedTime = "";
+    if (hours > 0) {
+      formattedTime += `${hours}時 `;
+    }
+    if (minutes > 0 || hours > 0) {
+      formattedTime += `${minutes}分 `;
+    }
+    formattedTime += `${sec}秒`;
+
+    setTotalTime(formattedTime);
+  }, [videoList]);
+
   return (
     <>
       {children}
@@ -285,7 +313,7 @@ const SongList = ({ videoList, children, search }) => {
       <NewListModal isOpen={newList} close={() => openNewList(false)} />
       {!search && (
         <div className="bg-white text-xs py-2 px-6 border-y-[1px] border-gray">
-          {videoList.length}首歌曲 ╴ n分鐘
+          {videoList.length}首歌曲 ╴ {totalTime}
         </div>
       )}
     </>
