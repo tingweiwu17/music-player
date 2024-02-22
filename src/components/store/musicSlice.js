@@ -18,6 +18,7 @@ const musicSlice = createSlice({
     currentPlaylist: null,
     currentSong: "",
     isPlaying: false,
+    randomPlay: false,
   },
   reducers: {
     switchPlaylist: (state, action) => {
@@ -51,10 +52,14 @@ const musicSlice = createSlice({
     setCurrentSong: (state, action) => {
       state.currentSong = action.payload;
     },
+    toggleRandomPlay: (state, action) => {
+      state.randomPlay = !action.payload;
+    },
   },
 });
 
 export const {
+  toggleRandomPlay,
   switchPlaylist,
   addToPlaylist,
   removeFromPlaylist,

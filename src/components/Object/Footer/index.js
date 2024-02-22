@@ -16,10 +16,12 @@ import he from "he";
 import { PiMusicNotesFill } from "react-icons/pi";
 import classNames from "classnames";
 import "./Footer.scss";
-import { setCurrentSong } from "../../store/musicSlice";
+import { setCurrentSong, toggleRandomPlay } from "../../store/musicSlice";
 import YouTube from "react-youtube";
+import SongList from "../SongList.js";
 
 const Footer = () => {
+  const isRandom = useSelector((state) => state.music.randomPlay);
   const isPlaying = useSelector((state) => state.music.isPlaying);
   const dispatch = useDispatch();
   const [openPlayModal, setOpenPlayModal] = useState(false);
@@ -45,9 +47,9 @@ const Footer = () => {
   const volumeOnOrOff = (condition) => {
     setVolumeOn(condition);
     if (condition) {
-      setVolume(30);
+      setVideoVolume(50);
     } else {
-      setVolume(0);
+      setVideoVolume(0);
     }
   };
 
@@ -63,14 +65,27 @@ const Footer = () => {
     }
   };
 
+  const [playRecord, setPlayRecord] = useState([]);
+
   const nextSong = () => {
     if (currentPlaylist !== null) {
       const songlist = currentPlaylist.songs;
+      console.log(songlist);
       const index = songlist.findIndex((item) => item.id === currSong.id);
-      if (index + 2 < songlist.length) {
-        dispatch(setCurrentSong(songlist[index + 1]));
+      if (isRandom) {
+        const remainingSongs = songlist.filter(
+          (item) => !playRecord.includes(item)
+        );
+        const randomIndex = Math.floor(Math.random() * remainingSongs.length);
+        const nextRandomSong = remainingSongs[randomIndex];
+        dispatch(setCurrentSong(nextRandomSong));
+        setPlayRecord([...playRecord, nextRandomSong]);
       } else {
-        dispatch(setCurrentSong(songlist[0]));
+        if (index + 2 < songlist.length) {
+          dispatch(setCurrentSong(songlist[index + 1]));
+        } else {
+          dispatch(setCurrentSong(songlist[0]));
+        }
       }
     } else {
       return false;
@@ -81,10 +96,16 @@ const Footer = () => {
     if (currentPlaylist !== null) {
       const songlist = currentPlaylist.songs;
       const index = songlist.findIndex((item) => item.id === currSong.id);
-      if (index === 0) {
-        dispatch(setCurrentSong(songlist[songlist.length]));
+      if (isRandom) {
+        if (playRecord.length >= 0) {
+          dispatch(setCurrentSong(playRecord[playRecord.length - 1]));
+        }
       } else {
-        dispatch(setCurrentSong(songlist[index - 1]));
+        if (index === 0) {
+          dispatch(setCurrentSong(songlist[songlist.length]));
+        } else {
+          dispatch(setCurrentSong(songlist[index - 1]));
+        }
       }
     } else {
       return false;
@@ -172,11 +193,13 @@ const Footer = () => {
     return () => clearInterval(interval);
   }, [currentTime, isPlaying]);
 
-  useEffect(() => {
-    if (currentTime === timeToSeconds(currSong.duration) - 1) {
-      nextSong();
-    }
-  }, [currSong, currentTime]);
+  // useEffect(() => {
+  //   if (currentTime === timeToSeconds(currSong.duration) - 1) {
+  //     if (currentPlaylist !== null) {
+  //       nextSong();
+  //     }
+  //   }
+  // }, [currSong, currentPlaylist]);
 
   return (
     <>
@@ -226,7 +249,12 @@ const Footer = () => {
 
         <div>
           <div className="flex justify-center w-[500px] items-center">
-            <LiaRandomSolid className="w-4 h-4 mx-4 hover:text-themeBlue" />
+            <LiaRandomSolid
+              className={classNames("w-4 h-4 mx-4 hover:text-themeBlue", {
+                "text-themeBlue": isRandom,
+              })}
+              onClick={() => dispatch(toggleRandomPlay(!isRandom))}
+            />
             <div className="flex justify-center items-center">
               <IoPlayBack
                 className="w-6 h-6 mx-2 hover:text-themeBlue"

@@ -5,11 +5,13 @@ import { GiMusicSpell } from "react-icons/gi";
 import { FaPlay } from "react-icons/fa6";
 import { FaRandom } from "react-icons/fa";
 import { useParams } from "react-router-dom";
-import { setCurrentSong } from "../../components/store/musicSlice.js";
+import { toggleRandomPlay } from "../../components/store/musicSlice.js";
 import { useDispatch } from "react-redux";
+// import { useEffect } from "react";
 
 const Song = () => {
   const { playlistName } = useParams();
+  // const isRandom = useSelector((state) => state.music.randomPlay);
   const videoList = useSelector(
     (state) => state.music.playlists[playlistName]?.songs || []
   );
@@ -20,12 +22,6 @@ const Song = () => {
     (state) => state.music.playlists[playlistName]?.name || []
   );
   const dispatch = useDispatch();
-
-  const playRandomInList = () => {
-    const musicList = [...videoList];
-    const randomIndex = Math.floor(Math.random() * musicList.length);
-    dispatch(setCurrentSong(musicList[randomIndex]));
-  };
 
   const playListinList = () => {};
 
@@ -47,7 +43,7 @@ const Song = () => {
                   </button>
                   <button
                     className="flex items-center text-white bg-themeBlue py-1 w-20 mx-0.5 justify-center text-xs rounded"
-                    onClick={() => playRandomInList()}
+                    onClick={() => dispatch(toggleRandomPlay(true))}
                   >
                     <FaRandom className="mr-0.5" />
                     隨機播放
