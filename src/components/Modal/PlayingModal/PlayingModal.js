@@ -7,7 +7,7 @@ import {
   IoPause,
 } from "react-icons/io5";
 import { LiaRandomSolid } from "react-icons/lia";
-import { GrPowerCycle } from "react-icons/gr";
+import classNames from "classnames";
 import { IoMdVolumeOff } from "react-icons/io";
 import "./PlayingModal.scss";
 import { useDispatch } from "react-redux";
@@ -15,6 +15,7 @@ import { togglePlayPause } from "../../store/musicSlice";
 import he from "he";
 import Modal from "react-modal";
 import { PiMusicNotesFill } from "react-icons/pi";
+import { PiRepeatLight, PiRepeatOnce } from "react-icons/pi";
 
 const PlayingModal = ({
   isOpen,
@@ -32,6 +33,8 @@ const PlayingModal = ({
   setVideoVolume,
   volumeOnOrOff,
   isPlaying,
+  playRepeat,
+  repearBtn,
 }) => {
   const dispatch = useDispatch();
 
@@ -110,7 +113,26 @@ const PlayingModal = ({
                   onClick={nextSong}
                 />
               </div>
-              <GrPowerCycle className="w-5 h-5 mx-4 cursor-pointer" />
+
+              {repearBtn === 2 ? (
+                <PiRepeatOnce
+                  className="w-5 h-5 mx-4 text-themeBlue"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    playRepeat();
+                  }}
+                />
+              ) : (
+                <PiRepeatLight
+                  className={classNames("w-5 h-5 mx-4 hover:text-themeBlue", {
+                    "text-themeBlue": repearBtn === 1,
+                  })}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    playRepeat();
+                  }}
+                />
+              )}
             </div>
             <div className="w-[300px] m-auto relative">
               <input

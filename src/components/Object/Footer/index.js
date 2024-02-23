@@ -6,7 +6,6 @@ import {
   IoVolumeHigh,
 } from "react-icons/io5";
 import { LiaRandomSolid } from "react-icons/lia";
-import { GrPowerCycle } from "react-icons/gr";
 import { useSelector, useDispatch } from "react-redux";
 import { togglePlayPause } from "../../store/musicSlice";
 import { IoMdVolumeOff } from "react-icons/io";
@@ -18,7 +17,7 @@ import classNames from "classnames";
 import "./Footer.scss";
 import { setCurrentSong, toggleRandomPlay } from "../../store/musicSlice";
 import YouTube from "react-youtube";
-import SongList from "../SongList.js";
+import { PiRepeatLight, PiRepeatOnce } from "react-icons/pi";
 
 const Footer = () => {
   const isRandom = useSelector((state) => state.music.randomPlay);
@@ -33,10 +32,12 @@ const Footer = () => {
   const [lengthofsong, setLengthofsong] = useState(0);
   const [volume, setVolume] = useState(100);
   const [volumeOn, setVolumeOn] = useState(true);
+  const [playRecord, setPlayRecord] = useState([]);
+  const [repearBtn, setRepeatBtn] = useState(0);
 
   const videoOpts = {
     playerVars: {
-      autoplay: 0,
+      autoplay: 1,
     },
   };
 
@@ -65,12 +66,9 @@ const Footer = () => {
     }
   };
 
-  const [playRecord, setPlayRecord] = useState([]);
-
   const nextSong = () => {
-    if (currentPlaylist !== null) {
+    if (currentPlaylist.length !== 0) {
       const songlist = currentPlaylist.songs;
-      console.log(songlist);
       const index = songlist.findIndex((item) => item.id === currSong.id);
       if (isRandom) {
         const remainingSongs = songlist.filter(
@@ -93,7 +91,7 @@ const Footer = () => {
   };
 
   const lastSong = () => {
-    if (currentPlaylist !== null) {
+    if (currentPlaylist.length !== 0) {
       const songlist = currentPlaylist.songs;
       const index = songlist.findIndex((item) => item.id === currSong.id);
       if (isRandom) {
@@ -193,13 +191,13 @@ const Footer = () => {
     return () => clearInterval(interval);
   }, [currentTime, isPlaying]);
 
-  // useEffect(() => {
-  //   if (currentTime === timeToSeconds(currSong.duration) - 1) {
-  //     if (currentPlaylist !== null) {
-  //       nextSong();
-  //     }
-  //   }
-  // }, [currSong, currentPlaylist]);
+  const playRepeat = () => {
+    if (repearBtn === 2) {
+      setRepeatBtn(0);
+    } else {
+      setRepeatBtn((pre) => pre + 1);
+    }
+  };
 
   return (
     <>
@@ -221,6 +219,8 @@ const Footer = () => {
         setVideoVolume={setVideoVolume}
         volumeOnOrOff={volumeOnOrOff}
         isPlaying={isPlaying}
+        playRepeat={() => playRepeat()}
+        repearBtn={repearBtn}
       />
       <div
         className="fixed bottom-0 flex bg-white h-[70px] cursor-pointer justify-between items-center w-full z-20 p-4 border-t-[1px] border-lightGray"
@@ -253,30 +253,63 @@ const Footer = () => {
               className={classNames("w-4 h-4 mx-4 hover:text-themeBlue", {
                 "text-themeBlue": isRandom,
               })}
-              onClick={() => dispatch(toggleRandomPlay(!isRandom))}
+              onClick={(e) => {
+                e.stopPropagation();
+                dispatch(toggleRandomPlay(!isRandom));
+              }}
             />
             <div className="flex justify-center items-center">
               <IoPlayBack
                 className="w-6 h-6 mx-2 hover:text-themeBlue"
-                onClick={() => lastSong()}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  lastSong();
+                }}
               />
               {!isPlaying ? (
                 <IoPlay
                   className="w-7 h-7 mx-2 drop-shadow-lg cursor-pointer hover:text-themeBlue"
-                  onClick={() => dispatch(togglePlayPause())}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    dispatch(togglePlayPause());
+                  }}
                 />
               ) : (
                 <IoPause
                   className="w-7 h-7 mx-2 drop-shadow-lg cursor-pointer hover:text-themeBlue"
-                  onClick={() => dispatch(togglePlayPause())}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    dispatch(togglePlayPause());
+                  }}
                 />
               )}
               <IoPlayForward
-                className="w-6 h-6 mx-2 hover:text-themeBlue"
-                onClick={() => nextSong()}
+                className={classNames("w-6 h-6 mx-2 hover:text-themeBlue")}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  nextSong();
+                }}
               />
             </div>
-            <GrPowerCycle className="w-4 h-4 mx-4 hover:text-themeBlue" />
+            {repearBtn === 2 ? (
+              <PiRepeatOnce
+                className="w-4 h-4 mx-4 text-themeBlue"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  playRepeat();
+                }}
+              />
+            ) : (
+              <PiRepeatLight
+                className={classNames("w-4 h-4 mx-4 hover:text-themeBlue", {
+                  "text-themeBlue": repearBtn === 1,
+                })}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  playRepeat();
+                }}
+              />
+            )}
           </div>
           <div className="music-control flex relative items-center justify-center text-xs mt-1">
             <span>{formatTime(currentTime)}</span>
@@ -285,7 +318,10 @@ const Footer = () => {
               value={Math.floor(currentTime)}
               min={0}
               max={timeToSeconds(currSong.duration)}
-              onChange={(e) => handleSchedule(e)}
+              onChange={(e) => {
+                e.stopPropagation();
+                handleSchedule(e);
+              }}
             />
             <div className="absolute w-[80%]">
               <p
@@ -296,15 +332,21 @@ const Footer = () => {
             <span>{currSong.duration}</span>
           </div>
         </div>
-        <div className="w-[30%] footer flex justify-end relative items-center">
+        <div className="w-[30%] mt-4 footer flex justify-end relative items-center">
           {volumeOn ? (
             <IoVolumeHigh
-              onClick={() => volumeOnOrOff(false)}
+              onClick={(e) => {
+                e.stopPropagation();
+                volumeOnOrOff(false);
+              }}
               className="mr-2"
             />
           ) : (
             <IoMdVolumeOff
-              onClick={() => volumeOnOrOff(true)}
+              onClick={(e) => {
+                e.stopPropagation();
+                volumeOnOrOff(true);
+              }}
               className="mr-2"
             />
           )}
@@ -316,7 +358,7 @@ const Footer = () => {
             value={volume}
             onChange={(e) => setVideoVolume(parseInt(e.target.value))}
           />
-          <div className="absolute w-[50%]">
+          <div className="absolute w-[30%]">
             <p className="h-1 bg-grayBg" style={{ width: `${volume}%` }}></p>
           </div>
         </div>

@@ -5,13 +5,15 @@ import { GiMusicSpell } from "react-icons/gi";
 import { FaPlay } from "react-icons/fa6";
 import { FaRandom } from "react-icons/fa";
 import { useParams } from "react-router-dom";
-import { toggleRandomPlay } from "../../components/store/musicSlice.js";
+import {
+  setCurrentSong,
+  switchPlaylist,
+  toggleRandomPlay,
+} from "../../components/store/musicSlice.js";
 import { useDispatch } from "react-redux";
-// import { useEffect } from "react";
 
 const Song = () => {
   const { playlistName } = useParams();
-  // const isRandom = useSelector((state) => state.music.randomPlay);
   const videoList = useSelector(
     (state) => state.music.playlists[playlistName]?.songs || []
   );
@@ -23,7 +25,10 @@ const Song = () => {
   );
   const dispatch = useDispatch();
 
-  const playListinList = () => {};
+  const playListinList = () => {
+    dispatch(switchPlaylist(playlistName));
+    dispatch(setCurrentSong(videoList[0]));
+  };
 
   return (
     <>

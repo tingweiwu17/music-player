@@ -113,6 +113,7 @@ const SongList = ({ videoList, children, search }) => {
           title: videoContent.snippet.title,
         };
         dispatch(setCurrentSong(song));
+        dispatch(switchPlaylist([]));
       })
       .catch((err) => {
         console.error(err);
@@ -122,7 +123,6 @@ const SongList = ({ videoList, children, search }) => {
   const playThisSong = (id) => {
     if (search) {
       getDataofVideo(id);
-      dispatch(switchPlaylist([]));
     } else {
       for (const plName in playlists) {
         if (playlists.hasOwnProperty(playlistName)) {
@@ -169,10 +169,20 @@ const SongList = ({ videoList, children, search }) => {
     const list = [...videoList];
     const totalSeconds = list
       .map((video) => {
-        const [minutes, seconds] = video.duration.split(":").map(Number);
-        return minutes * 60 + seconds;
+        if (video && video.duration) {
+          const [minutes, seconds] = video.duration.split(":").map(Number);
+          return minutes * 60 + seconds;
+        } else {
+          return 0;
+        }
       })
-      .reduce((total, seconds) => total + seconds, 0);
+      .reduce((total, seconds) => {
+        if (typeof seconds === "number") {
+          return total + seconds;
+        } else {
+          return total;
+        }
+      }, 0);
     let sec = totalSeconds;
     let hours = Math.floor(sec / 3600);
     sec %= 3600;
