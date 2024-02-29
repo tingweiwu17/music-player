@@ -67,7 +67,13 @@ const Footer = () => {
   };
 
   const nextSong = () => {
-    if (currentPlaylist.length !== 0) {
+    if (repearBtn !== 0) {
+      dispatch(setCurrentSong(currSong));
+      setCurrentTime(0);
+      if (playerRef.current && playerRef.current.internalPlayer) {
+        playerRef.current.internalPlayer.seekTo(0, true);
+      }
+    } else if (currentPlaylist.length !== 0) {
       const songlist = currentPlaylist.songs;
       const index = songlist.findIndex((item) => item.id === currSong.id);
       if (isRandom) {
@@ -199,6 +205,12 @@ const Footer = () => {
     }
   };
 
+  useEffect(() => {
+    if (currentTime === timeToSeconds(currSong.duration) - 1) {
+      nextSong();
+    }
+  }, [currSong, currentTime]);
+
   return (
     <>
       <PlayingModal
@@ -252,39 +264,70 @@ const Footer = () => {
             <LiaRandomSolid
               className={classNames("w-4 h-4 mx-4 hover:text-themeBlue", {
                 "text-themeBlue": isRandom,
+                "text-lightGray hover:text-lightGray": currSong === "",
               })}
               onClick={(e) => {
                 e.stopPropagation();
-                dispatch(toggleRandomPlay(!isRandom));
+                if (currSong !== "") {
+                  dispatch(toggleRandomPlay(!isRandom));
+                }
               }}
             />
             <div className="flex justify-center items-center">
               <IoPlayBack
-                className="w-6 h-6 mx-2 hover:text-themeBlue"
+                className={classNames(
+                  "w-6 h-6 mx-2 cursor-pointer hover:text-themeBlue",
+                  {
+                    "text-lightGray hover:text-lightGray": currSong === "",
+                  }
+                )}
                 onClick={(e) => {
                   e.stopPropagation();
-                  lastSong();
+                  if (currSong !== "") {
+                    lastSong();
+                  }
                 }}
               />
               {!isPlaying ? (
                 <IoPlay
-                  className="w-7 h-7 mx-2 drop-shadow-lg cursor-pointer hover:text-themeBlue"
+                  className={classNames(
+                    "w-7 h-7 mx-2 drop-shadow-lg cursor-pointer hover:text-themeBlue",
+                    {
+                      "text-lightGray drop-shadow-none hover:text-lightGray":
+                        currSong === "",
+                    }
+                  )}
                   onClick={(e) => {
                     e.stopPropagation();
-                    dispatch(togglePlayPause());
+                    if (currSong !== "") {
+                      dispatch(togglePlayPause(true));
+                    }
                   }}
                 />
               ) : (
                 <IoPause
-                  className="w-7 h-7 mx-2 drop-shadow-lg cursor-pointer hover:text-themeBlue"
+                  className={classNames(
+                    "w-7 h-7 mx-2 drop-shadow-lg cursor-pointer hover:text-themeBlue",
+                    {
+                      "text-lightGray drop-shadow-none hover:text-lightGray":
+                        currSong === "",
+                    }
+                  )}
                   onClick={(e) => {
                     e.stopPropagation();
-                    dispatch(togglePlayPause());
+                    if (currSong !== "") {
+                      dispatch(togglePlayPause(false));
+                    }
                   }}
                 />
               )}
               <IoPlayForward
-                className={classNames("w-6 h-6 mx-2 hover:text-themeBlue")}
+                className={classNames(
+                  "w-6 h-6 mx-2 cursor-pointer hover:text-themeBlue",
+                  {
+                    "text-lightGray  hover:text-lightGray": currSong === "",
+                  }
+                )}
                 onClick={(e) => {
                   e.stopPropagation();
                   nextSong();
@@ -303,6 +346,7 @@ const Footer = () => {
               <PiRepeatLight
                 className={classNames("w-4 h-4 mx-4 hover:text-themeBlue", {
                   "text-themeBlue": repearBtn === 1,
+                  "text-lightGray  hover:text-lightGray": currSong === "",
                 })}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -356,7 +400,10 @@ const Footer = () => {
             min="0"
             max="100"
             value={volume}
-            onChange={(e) => setVideoVolume(parseInt(e.target.value))}
+            onChange={(e) => {
+              e.stopPropagation();
+              setVideoVolume(parseInt(e.target.value));
+            }}
           />
           <div className="absolute w-[30%]">
             <p className="h-1 bg-grayBg" style={{ width: `${volume}%` }}></p>

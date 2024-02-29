@@ -16,6 +16,7 @@ import he from "he";
 import Modal from "react-modal";
 import { PiMusicNotesFill } from "react-icons/pi";
 import { PiRepeatLight, PiRepeatOnce } from "react-icons/pi";
+import { useSelector } from "react-redux";
 
 const PlayingModal = ({
   isOpen,
@@ -36,6 +37,7 @@ const PlayingModal = ({
   playRepeat,
   repearBtn,
 }) => {
+  const isRandom = useSelector((state) => state.music.randomPlay);
   const dispatch = useDispatch();
 
   const customModalStyle = {
@@ -91,7 +93,12 @@ const PlayingModal = ({
               <span>{currSong.duration}</span>
             </div>
             <div className="flex justify-center items-center mt-2 mb-6">
-              <LiaRandomSolid className="w-5 h-5  mx-4 cursor-pointer active:drop-shadow-none" />
+              <LiaRandomSolid
+                className={classNames(
+                  "w-5 h-5  mx-4 cursor-pointer active:drop-shadow-none hover:text-themeBlue",
+                  { "text-themeBlue": isRandom }
+                )}
+              />
               <div className="flex justify-center ">
                 <IoPlayBack
                   className="w-8 h-8 text-white mx-2 drop-shadow-lg cursor-pointer"
@@ -100,12 +107,20 @@ const PlayingModal = ({
                 {!isPlaying ? (
                   <IoPlay
                     className="w-8 h-8 text-white mx-2 drop-shadow-lg cursor-pointer active:drop-shadow-none"
-                    onClick={() => dispatch(togglePlayPause())}
+                    onClick={() => {
+                      if (currSong !== "") {
+                        dispatch(togglePlayPause(true));
+                      }
+                    }}
                   />
                 ) : (
                   <IoPause
                     className="w-8 h-8 text-white mx-2 drop-shadow-lg cursor-pointer active:drop-shadow-none"
-                    onClick={() => dispatch(togglePlayPause())}
+                    onClick={() => {
+                      if (currSong !== "") {
+                        dispatch(togglePlayPause(false));
+                      }
+                    }}
                   />
                 )}
                 <IoPlayForward
@@ -116,7 +131,7 @@ const PlayingModal = ({
 
               {repearBtn === 2 ? (
                 <PiRepeatOnce
-                  className="w-5 h-5 mx-4 text-themeBlue"
+                  className="w-5 h-5 mx-4 text-themeBlue cursor-pointer"
                   onClick={(e) => {
                     e.stopPropagation();
                     playRepeat();
@@ -124,9 +139,12 @@ const PlayingModal = ({
                 />
               ) : (
                 <PiRepeatLight
-                  className={classNames("w-5 h-5 mx-4 hover:text-themeBlue", {
-                    "text-themeBlue": repearBtn === 1,
-                  })}
+                  className={classNames(
+                    "w-5 h-5 mx-4 hover:text-themeBlue cursor-pointer",
+                    {
+                      "text-themeBlue": repearBtn === 1,
+                    }
+                  )}
                   onClick={(e) => {
                     e.stopPropagation();
                     playRepeat();

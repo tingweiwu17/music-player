@@ -46,8 +46,8 @@ const musicSlice = createSlice({
         songs: [],
       };
     },
-    togglePlayPause: (state) => {
-      state.isPlaying = !state.isPlaying;
+    togglePlayPause: (state, action) => {
+      state.isPlaying = action.payload;
     },
     setCurrentSong: (state, action) => {
       state.currentSong = action.payload;

@@ -7,6 +7,7 @@ import {
   removeFromPlaylist,
   setCurrentSong,
   switchPlaylist,
+  togglePlayPause,
 } from "../../store/musicSlice";
 import axios from "axios";
 import { useParams } from "react-router-dom";
@@ -121,6 +122,7 @@ const SongList = ({ videoList, children, search }) => {
   };
 
   const playThisSong = (id) => {
+    dispatch(togglePlayPause(true));
     if (search) {
       getDataofVideo(id);
     } else {
